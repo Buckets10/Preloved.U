@@ -31,14 +31,6 @@ Platform marketplace khusus mahasiswa untuk memposting, mencari, dan menghubungi
 - **Database:** MySQL
 - **Version Control:** Git & GitHub
 
-## 👥 Tim Pengembang
-
-| Nama | Role |
-|---|---|
-| _(isi nama)_ | _(isi role)_ |
-| _(isi nama)_ | _(isi role)_ |
-| _(isi nama)_ | _(isi role)_ |
-
 ## 📅 Status Project
 
 🚧 **Tahap saat ini:** Kickoff — Define Product (Pertemuan 1)
