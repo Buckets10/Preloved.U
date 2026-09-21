@@ -27,7 +27,7 @@ Platform marketplace khusus mahasiswa untuk memposting, mencari, dan menghubungi
 ## 🛠️ Tech Stack
 
 - **Frontend:** HTML, CSS, JavaScript
-- **Backend:** PHP (Laravel)
+- **Backend:** PHP 
 - **Database:** MySQL
 - **Version Control:** Git & GitHub
 
