@@ -63,14 +63,12 @@ Tidak perlu instalasi tambahan.
 
 ## 👥 Tim Pengembang
 
-| Nama |
 - | _Mukhammad Farhan Prayoga_ | _220_ |
 - | _Zinedine Rivan Abdus Syukur_ | _364_ |
 - | _Rafi Chesta Adabi_ | _376_ |
 
 ## 📅 Progres
 
-| Pertemuan | Sprint | Status |
 - | 1 | Kickoff: Product Canvas dan repository | Selesai |
 - | 2 | Task 2 : HTML semantic dan CSS responsive | Selesai |
 - | 3 | Task 3 : interaksi dengan JavaScript | Selesai |
