@@ -93,7 +93,7 @@ nav a:focus-visible {
   color: var(--amber);
 }
 
-/* ===== SEARCH & FILTER ===== */
+
 .search-filter {
   max-width: 1100px;
   margin: 32px auto 0;
@@ -218,7 +218,7 @@ nav a:focus-visible {
   color: var(--white);
 }
 
-/* ===== FOOTER ===== */
+
 footer {
   text-align: center;
   padding: 20px;
@@ -298,7 +298,7 @@ footer {
   background-color: var(--bg);
 }
 
-/* ===== DIALOG (modal) ===== */
+
 dialog {
   border: none;
   border-radius: var(--radius);
@@ -405,7 +405,7 @@ dialog::backdrop {
   margin-top: -12px;
 }
 
-/* ===== TOMBOL FAVORIT ===== */
+
 .product-card {
   position: relative;
 }

@@ -1,9 +1,9 @@
 const DATA_DUMMY = [
   { id: 1,  nama: 'Buku Pemrograman Web',            harga: 50000,  kategori: 'buku',       status: 'tersedia', wa: '628123456789', deskripsi: 'Buku bekas kondisi baik, tanpa coretan.', foto: 'img/buku 1.jpg' },
   { id: 2,  nama: 'Kipas Angin Kecil',               harga: 75000,  kategori: 'elektronik', status: 'nego',     wa: '628123456789', deskripsi: 'Kipas angin mini, masih berfungsi normal.', foto: 'img/PASFOT.jpeg' },
-  { id: 3,  nama: 'Mouse Wireless',                  harga: 35000,  kategori: 'elektronik', status: 'tersedia', wa: '628123456789', deskripsi: 'Mouse wireless, baterai baru diganti.', foto: null },
-  { id: 4,  nama: 'Rak Buku Kayu',                   harga: 120000, kategori: 'perabot',    status: 'tersedia', wa: '628123456789', deskripsi: 'Rak 4 tingkat, cocok untuk kamar kos.', foto: null },
-  { id: 5, nama: 'Meja Belajar Lipat',              harga: 90000,  kategori: 'perabot',    status: 'tersedia', wa: '628123456789', deskripsi: 'Meja lipat ringan, mudah dibawa pindahan.', foto: null },
+  { id: 3,  nama: 'Mouse Wireless',                  harga: 35000,  kategori: 'elektronik', status: 'tersedia', wa: '628123456789', deskripsi: 'Mouse wireless, baterai baru diganti.', foto: 'img/mouse.jpg' },
+  { id: 4,  nama: 'Rak Buku Kayu',                   harga: 120000, kategori: 'perabot',    status: 'tersedia', wa: '628123456789', deskripsi: 'Rak 4 tingkat, cocok untuk kamar kos.', foto: 'img/rakbuku.jpg' },
+  { id: 5,  nama: 'Meja Belajar Lipat',              harga: 90000,  kategori: 'perabot',    status: 'tersedia', wa: '628123456789', deskripsi: 'Meja lipat ringan, mudah dibawa pindahan.', foto: 'img/Mejalipat.jpg' },
 ];
 
 const namaStatus   = { tersedia: 'Tersedia', nego: 'Nego', terjual: 'Terjual' };
