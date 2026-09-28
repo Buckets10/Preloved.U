@@ -16,7 +16,7 @@
   --shadow: 0 2px 8px rgba(27, 42, 74, 0.08);
 }
 
-/* ===== RESET DASAR ===== */
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -44,7 +44,7 @@ button {
   font-family: 'Inter', sans-serif;
 }
 
-/* Sembunyikan visual, tetap terbaca screen reader */
+
 .sr-only {
   position: absolute;
   width: 1px;
@@ -54,7 +54,7 @@ button {
   white-space: nowrap;
 }
 
-/* ===== HEADER ===== */
+
 header {
   background-color: var(--navy);
   color: var(--white);
@@ -97,7 +97,7 @@ nav a:focus-visible {
   color: var(--amber);
 }
 
-/* ===== SEARCH & FILTER ===== */
+
 .search-filter {
   max-width: 1100px;
   margin: 32px auto 0;
@@ -134,7 +134,7 @@ nav a:focus-visible {
   background-color: var(--navy-dark);
 }
 
-/* ===== PRODUCT LIST (grid responsif) ===== */
+
 .product-list {
   max-width: 1100px;
   margin: 32px auto;
@@ -162,7 +162,7 @@ nav a:focus-visible {
   }
 }
 
-/* ===== PRODUCT CARD ===== */
+
 .product-card {
   background-color: var(--white);
   border-radius: var(--radius);
@@ -224,7 +224,7 @@ nav a:focus-visible {
   color: var(--white);
 }
 
-/* ===== FOOTER ===== */
+
 footer {
   text-align: center;
   padding: 20px;
@@ -232,7 +232,7 @@ footer {
   font-size: 0.85rem;
 }
 
-/* ===== RESPONSIVE: MOBILE ===== */
+
 @media (max-width: 640px) {
   header {
     flex-direction: column;
@@ -252,7 +252,7 @@ footer {
   }
 }
 
-/* ===== STATUS TAMBAHAN & PLACEHOLDER GAMBAR ===== */
+
 .status--terjual {
   background-color: #EEE;
   color: var(--text-muted);
@@ -275,7 +275,7 @@ footer {
   text-align: center;
 }
 
-/* ===== BUTTON UMUM (dialog) ===== */
+
 .btn {
   display: inline-block;
   padding: 10px 18px;
@@ -306,7 +306,7 @@ footer {
   background-color: var(--bg);
 }
 
-/* ===== DIALOG (modal) ===== */
+
 dialog {
   border: none;
   border-radius: var(--radius);
@@ -379,7 +379,7 @@ dialog::backdrop {
   margin-top: 14px;
 }
 
-/* ===== CHIPS KATEGORI ===== */
+
 .chips {
   max-width: 1100px;
   margin: 16px auto 0;
@@ -414,7 +414,7 @@ dialog::backdrop {
   margin-top: -12px;
 }
 
-/* ===== TOMBOL FAVORIT ===== */
+
 .product-card {
   position: relative;
 }
@@ -444,7 +444,7 @@ dialog::backdrop {
   }
 }
 
-/* ===== DETAIL: MERK, UKURAN, KONDISI ===== */
+
 .spec-list {
   display: grid;
   gap: 6px;
@@ -470,7 +470,7 @@ dialog::backdrop {
   text-align: right;
 }
 
-/* ===== FORM: PESAN ERROR & LINK ===== */
+
 .form-error {
   color: #C0392B;
   font-size: 0.875rem;
@@ -485,4 +485,21 @@ dialog::backdrop {
   font-size: inherit;
   font-weight: 600;
   text-decoration: underline;
+}
+
+
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  transform: translateX(-50%);
+  max-width: min(92vw, 420px);
+  padding: 12px 20px;
+  background-color: var(--navy);
+  color: var(--white);
+  border-radius: var(--radius);
+  box-shadow: 0 6px 20px rgba(27, 42, 74, 0.3);
+  font-size: 0.9rem;
+  text-align: center;
+  z-index: 100;
 }
