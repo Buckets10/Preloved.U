@@ -1,3 +1,4 @@
+/* ===== DESIGN TOKENS ===== */
 :root {
   --navy: #1B2A4A;
   --navy-dark: #14213A;
@@ -15,6 +16,7 @@
   --shadow: 0 2px 8px rgba(27, 42, 74, 0.08);
 }
 
+/* ===== RESET DASAR ===== */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -42,6 +44,7 @@ button {
   font-family: 'Inter', sans-serif;
 }
 
+/* Sembunyikan visual, tetap terbaca screen reader */
 .sr-only {
   position: absolute;
   width: 1px;
@@ -51,6 +54,7 @@ button {
   white-space: nowrap;
 }
 
+/* ===== HEADER ===== */
 header {
   background-color: var(--navy);
   color: var(--white);
@@ -93,7 +97,7 @@ nav a:focus-visible {
   color: var(--amber);
 }
 
-
+/* ===== SEARCH & FILTER ===== */
 .search-filter {
   max-width: 1100px;
   margin: 32px auto 0;
@@ -130,6 +134,7 @@ nav a:focus-visible {
   background-color: var(--navy-dark);
 }
 
+/* ===== PRODUCT LIST (grid responsif) ===== */
 .product-list {
   max-width: 1100px;
   margin: 32px auto;
@@ -157,6 +162,7 @@ nav a:focus-visible {
   }
 }
 
+/* ===== PRODUCT CARD ===== */
 .product-card {
   background-color: var(--white);
   border-radius: var(--radius);
@@ -218,7 +224,7 @@ nav a:focus-visible {
   color: var(--white);
 }
 
-
+/* ===== FOOTER ===== */
 footer {
   text-align: center;
   padding: 20px;
@@ -246,6 +252,7 @@ footer {
   }
 }
 
+/* ===== STATUS TAMBAHAN & PLACEHOLDER GAMBAR ===== */
 .status--terjual {
   background-color: #EEE;
   color: var(--text-muted);
@@ -268,6 +275,7 @@ footer {
   text-align: center;
 }
 
+/* ===== BUTTON UMUM (dialog) ===== */
 .btn {
   display: inline-block;
   padding: 10px 18px;
@@ -298,7 +306,7 @@ footer {
   background-color: var(--bg);
 }
 
-
+/* ===== DIALOG (modal) ===== */
 dialog {
   border: none;
   border-radius: var(--radius);
@@ -371,6 +379,7 @@ dialog::backdrop {
   margin-top: 14px;
 }
 
+/* ===== CHIPS KATEGORI ===== */
 .chips {
   max-width: 1100px;
   margin: 16px auto 0;
@@ -405,7 +414,7 @@ dialog::backdrop {
   margin-top: -12px;
 }
 
-
+/* ===== TOMBOL FAVORIT ===== */
 .product-card {
   position: relative;
 }
@@ -433,4 +442,47 @@ dialog::backdrop {
   .chips {
     padding: 0 20px;
   }
+}
+
+/* ===== DETAIL: MERK, UKURAN, KONDISI ===== */
+.spec-list {
+  display: grid;
+  gap: 6px;
+  margin: 6px 0;
+  padding: 12px 14px;
+  background-color: var(--bg);
+  border-radius: var(--radius);
+}
+
+.spec-list > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.spec-list dt {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.spec-list dd {
+  font-weight: 500;
+  text-align: right;
+}
+
+/* ===== FORM: PESAN ERROR & LINK ===== */
+.form-error {
+  color: #C0392B;
+  font-size: 0.875rem;
+  min-height: 1.2em;
+}
+
+.btn-link {
+  background: none;
+  border: none;
+  padding: 0;
+  color: var(--navy);
+  font-size: inherit;
+  font-weight: 600;
+  text-decoration: underline;
 }

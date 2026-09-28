@@ -10,7 +10,6 @@
 </head>
 <body id="top">
 
-  
   <header>
     <div class="logo">
       <span class="logo-icon">🛍️</span>
@@ -21,21 +20,19 @@
         <li><a href="#top" id="nav-beranda">Beranda</a></li>
         <li><a href="#kategori" id="nav-kategori">Kategori</a></li>
         <li><a href="#" id="nav-post">Post Barang</a></li>
+        <li id="li-daftar"><a href="#" id="nav-daftar">Daftar</a></li>
         <li><a href="#" id="nav-login">Login</a></li>
       </ul>
     </nav>
   </header>
 
-
   <main>
 
-   
     <section class="search-filter">
       <label for="search" class="sr-only">Cari barang</label>
       <input type="text" id="search" name="search" placeholder="Cari barang, misal: buku, kipas, meja...">
       <button type="button" id="btn-cari">Cari</button>
     </section>
-
 
     <section class="chips" id="kategori" aria-label="Filter kategori">
       <button type="button" class="chip active" data-kategori="semua">Semua</button>
@@ -45,7 +42,6 @@
       <button type="button" class="chip" data-kategori="favorit">♥ Favorit</button>
     </section>
 
-
     <section class="product-list" id="product-list">
       <h1>Barang Tersedia</h1>
       <p id="hasil-info" class="detail-meta"></p>
@@ -54,18 +50,22 @@
     <p id="empty-message" class="empty-message" hidden>Barang tidak ditemukan. Coba kata kunci atau kategori lain.</p>
   </main>
 
- 
   <footer>
     <p>&copy; 2026 Preloved.U</p>
   </footer>
 
-
+  <!-- Detail barang -->
   <dialog id="dialog-detail">
     <div class="dialog-body">
       <div id="detail-gambar"></div>
       <h2 id="detail-nama"></h2>
       <p class="price" id="detail-harga"></p>
       <p><span class="status" id="detail-status"></span></p>
+      <dl class="spec-list">
+        <div><dt>Merk</dt><dd id="detail-merk"></dd></div>
+        <div><dt>Ukuran</dt><dd id="detail-ukuran"></dd></div>
+        <div><dt>Kondisi</dt><dd id="detail-kondisi"></dd></div>
+      </dl>
       <p class="detail-meta" id="detail-kategori"></p>
       <p id="detail-deskripsi"></p>
       <div class="dialog-actions">
@@ -75,30 +75,61 @@
     </div>
   </dialog>
 
+  <!-- Daftar akun -->
+  <dialog id="dialog-daftar">
+    <form id="form-daftar" class="dialog-body">
+      <h2>Buat Akun</h2>
+      <p class="detail-meta">Daftar dulu sebelum bisa login.</p>
+      <label for="daftar-nama">Nama</label>
+      <input type="text" id="daftar-nama" required>
+      <label for="daftar-email">Email kampus</label>
+      <input type="email" id="daftar-email" required>
+      <label for="daftar-password">Password (min. 6 karakter)</label>
+      <input type="password" id="daftar-password" required>
+      <p class="form-error" id="daftar-error" role="alert"></p>
+      <div class="dialog-actions">
+        <button type="submit" class="btn btn-primary">Daftar</button>
+        <button type="button" class="btn btn-ghost" data-close>Batal</button>
+      </div>
+      <p class="detail-meta">Sudah punya akun? <button type="button" class="btn-link" id="ke-login">Login</button></p>
+    </form>
+  </dialog>
 
+  <!-- Login -->
   <dialog id="dialog-login">
     <form id="form-login" class="dialog-body">
       <h2>Login</h2>
       <p class="detail-meta" id="login-info">Masuk untuk memposting barang.</p>
-      <label for="login-nama">Nama</label>
-      <input type="text" id="login-nama" required>
       <label for="login-email">Email kampus</label>
       <input type="email" id="login-email" required>
       <label for="login-password">Password</label>
       <input type="password" id="login-password" required>
+      <p class="form-error" id="login-error" role="alert"></p>
       <div class="dialog-actions">
         <button type="submit" class="btn btn-primary">Masuk</button>
         <button type="button" class="btn btn-ghost" data-close>Batal</button>
       </div>
+      <p class="detail-meta">Belum punya akun? <button type="button" class="btn-link" id="ke-daftar">Daftar di sini</button></p>
     </form>
   </dialog>
 
-
+  <!-- Post barang -->
   <dialog id="dialog-post">
     <form id="form-post" class="dialog-body">
       <h2>Post Barang</h2>
       <label for="post-nama">Nama barang</label>
       <input type="text" id="post-nama" required>
+      <label for="post-merk">Merk</label>
+      <input type="text" id="post-merk" placeholder="Isi &quot;Tanpa merk&quot; jika tidak ada" required>
+      <label for="post-ukuran">Ukuran</label>
+      <input type="text" id="post-ukuran" placeholder="Contoh: 30 cm, A5, 120 x 40 cm" required>
+      <label for="post-kondisi">Kondisi barang</label>
+      <select id="post-kondisi" required>
+        <option>Seperti baru</option>
+        <option selected>Bagus</option>
+        <option>Layak pakai</option>
+        <option>Ada minus</option>
+      </select>
       <label for="post-harga">Harga (Rp)</label>
       <input type="number" id="post-harga" min="0" required>
       <label for="post-kategori">Kategori</label>

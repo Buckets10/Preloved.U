@@ -1,9 +1,9 @@
 const DATA_DUMMY = [
-  { id: 1,  nama: 'Buku Pemrograman Web',            harga: 50000,  kategori: 'buku',       status: 'tersedia', wa: '6281234438020', deskripsi: 'Buku bekas kondisi baik, tanpa coretan.', foto: 'img/buku 1.jpg' },
-  { id: 2,  nama: 'Kipas Angin Kecil',               harga: 75000,  kategori: 'elektronik', status: 'nego',     wa: '6281234438020', deskripsi: 'Kipas angin mini, masih berfungsi normal.', foto: 'img/PASFOT.jpeg' },
-  { id: 3,  nama: 'Mouse Wireless',                  harga: 35000,  kategori: 'elektronik', status: 'tersedia', wa: '6281234438020', deskripsi: 'Mouse wireless, baterai baru diganti.', foto: 'img/mouse.jpg' },
-  { id: 4,  nama: 'Rak Buku Kayu',                   harga: 120000, kategori: 'perabot',    status: 'tersedia', wa: '6281234438020', deskripsi: 'Rak 4 tingkat, cocok untuk kamar kos.', foto: 'img/rakbuku.jpg' },
-  { id: 5,  nama: 'Meja Belajar Lipat',              harga: 90000,  kategori: 'perabot',    status: 'tersedia', wa: '6281234438020', deskripsi: 'Meja lipat ringan, mudah dibawa pindahan.', foto: 'img/Mejalipat.jpg' },
+  { id: 1,  nama: 'Buku Pemrograman Web',            harga: 50000,  kategori: 'buku',       status: 'tersedia', wa: '6281234438020', merk: 'Penerbit lokal', ukuran: 'A5, ±250 halaman', kondisi: 'Bagus',       deskripsi: 'Buku bekas kondisi baik, tanpa coretan.', foto: 'img/buku 1.jpg' },
+  { id: 2,  nama: 'Kipas Angin Kecil',               harga: 75000,  kategori: 'elektronik', status: 'nego',     wa: '6281234438020', merk: 'Miyako',         ukuran: '20 cm',            kondisi: 'Bagus',       deskripsi: 'Kipas angin mini, masih berfungsi normal.', foto: 'img/PASFOT.jpeg' },
+  { id: 3,  nama: 'Mouse Wireless',                  harga: 35000,  kategori: 'elektronik', status: 'tersedia', wa: '6281234438020', merk: 'Logitech',       ukuran: 'Standar (±10 cm)', kondisi: 'Seperti baru', deskripsi: 'Mouse wireless, baterai baru diganti.', foto: 'img/mouse.jpg' },
+  { id: 4,  nama: 'Rak Buku Kayu',                   harga: 120000, kategori: 'perabot',    status: 'tersedia', wa: '6281234438020', merk: 'Tanpa merk',     ukuran: '80 x 30 x 120 cm', kondisi: 'Bagus',       deskripsi: 'Rak 4 tingkat, cocok untuk kamar kos.', foto: 'img/rakbuku.jpg' },
+  { id: 5,  nama: 'Meja Belajar Lipat',              harga: 90000,  kategori: 'perabot',    status: 'tersedia', wa: '6281234438020', merk: 'Tanpa merk',     ukuran: '60 x 40 cm',       kondisi: 'Layak pakai', deskripsi: 'Meja lipat ringan, mudah dibawa pindahan.', foto: 'img/Mejalipat.jpg' },
 ];
 
 const namaStatus   = { tersedia: 'Tersedia', nego: 'Nego', terjual: 'Terjual' };
@@ -23,6 +23,7 @@ function simpanKe(kunci, nilai) {
 let postingan = baca('mk_posts', []);      // barang yang diposting user
 let wishlist  = baca('mk_wishlist', []);   // daftar id barang favorit
 let userLogin = baca('mk_user', null);     // nama user yang login
+let daftarAkun = baca('mk_accounts', []);  // akun yang sudah terdaftar
 let kategoriAktif = 'semua';
 let kataKunci = '';
 
@@ -38,11 +39,15 @@ const chips        = document.querySelectorAll('.chip');
 const navBeranda  = document.getElementById('nav-beranda');
 const navKategori = document.getElementById('nav-kategori');
 const navPost     = document.getElementById('nav-post');
+const navDaftar   = document.getElementById('nav-daftar');
+const liDaftar    = document.getElementById('li-daftar');
 const navLogin    = document.getElementById('nav-login');
 
 const dialogDetail = document.getElementById('dialog-detail');
+const dialogDaftar = document.getElementById('dialog-daftar');
 const dialogLogin  = document.getElementById('dialog-login');
 const dialogPost   = document.getElementById('dialog-post');
+const formDaftar   = document.getElementById('form-daftar');
 const formLogin    = document.getElementById('form-login');
 const formPost     = document.getElementById('form-post');
 
@@ -174,6 +179,9 @@ function bukaDetail(item) {
 
   document.getElementById('detail-nama').textContent = item.nama;
   document.getElementById('detail-harga').textContent = formatRupiah(item.harga);
+  document.getElementById('detail-merk').textContent = item.merk || '-';
+  document.getElementById('detail-ukuran').textContent = item.ukuran || '-';
+  document.getElementById('detail-kondisi').textContent = item.kondisi || '-';
   document.getElementById('detail-kategori').textContent = 'Kategori: ' + namaKategori[item.kategori];
   document.getElementById('detail-deskripsi').textContent = item.deskripsi;
 
@@ -187,9 +195,30 @@ function bukaDetail(item) {
   dialogDetail.showModal();
 }
 
+// ===== AKUN: DAFTAR & LOGIN =====
 function updateTombolLogin() {
   navLogin.textContent = userLogin ? `Logout (${userLogin})` : 'Login';
+  liDaftar.hidden = !!userLogin;   // tombol Daftar hilang kalau sudah login
 }
+
+function bukaDaftar() {
+  formDaftar.reset();
+  document.getElementById('daftar-error').textContent = '';
+  dialogDaftar.showModal();
+}
+
+function bukaLogin(pesan, emailIsi = '') {
+  formLogin.reset();
+  document.getElementById('login-info').textContent = pesan;
+  document.getElementById('login-error').textContent = '';
+  document.getElementById('login-email').value = emailIsi;
+  dialogLogin.showModal();
+}
+
+navDaftar.addEventListener('click', (e) => {
+  e.preventDefault();
+  bukaDaftar();
+});
 
 navLogin.addEventListener('click', (e) => {
   e.preventDefault();
@@ -199,17 +228,46 @@ navLogin.addEventListener('click', (e) => {
     updateTombolLogin();
     alert('Kamu sudah logout.');
   } else {
-    document.getElementById('login-info').textContent = 'Masuk untuk memposting barang.';
-    dialogLogin.showModal();
+    bukaLogin('Masuk untuk memposting barang.');
   }
+});
+
+// pindah antar dialog
+document.getElementById('ke-daftar').addEventListener('click', () => { dialogLogin.close(); bukaDaftar(); });
+document.getElementById('ke-login').addEventListener('click', () => { dialogDaftar.close(); bukaLogin('Masuk untuk memposting barang.'); });
+
+formDaftar.addEventListener('submit', (e) => {
+  e.preventDefault();
+  const tampilError = (pesan) => { document.getElementById('daftar-error').textContent = pesan; };
+
+  const nama  = document.getElementById('daftar-nama').value.trim();
+  const email = document.getElementById('daftar-email').value.trim().toLowerCase();
+  const pass  = document.getElementById('daftar-password').value;
+
+  if (daftarAkun.some((a) => a.email === email)) return tampilError('Email ini sudah terdaftar. Silakan login.');
+  if (pass.length < 6) return tampilError('Password minimal 6 karakter.');
+
+  daftarAkun.push({ nama, email, password: pass });
+  simpanKe('mk_accounts', daftarAkun);
+
+  dialogDaftar.close();
+  bukaLogin('Akun berhasil dibuat! Silakan login.', email);
 });
 
 formLogin.addEventListener('submit', (e) => {
   e.preventDefault();
-  userLogin = document.getElementById('login-nama').value.trim();
+  const tampilError = (pesan) => { document.getElementById('login-error').textContent = pesan; };
+
+  const email = document.getElementById('login-email').value.trim().toLowerCase();
+  const pass  = document.getElementById('login-password').value;
+  const akun  = daftarAkun.find((a) => a.email === email);
+
+  if (!akun) return tampilError('Akun belum terdaftar. Silakan daftar dulu.');
+  if (akun.password !== pass) return tampilError('Password salah.');
+
+  userLogin = akun.nama;
   simpanKe('mk_user', userLogin);
   updateTombolLogin();
-  formLogin.reset();
   dialogLogin.close();
 });
 
@@ -217,8 +275,7 @@ formLogin.addEventListener('submit', (e) => {
 navPost.addEventListener('click', (e) => {
   e.preventDefault();
   if (!userLogin) {
-    document.getElementById('login-info').textContent = 'Kamu harus login dulu untuk memposting barang.';
-    dialogLogin.showModal();
+    bukaLogin('Kamu harus login dulu untuk memposting barang. Belum punya akun? Daftar dulu.');
     return;
   }
   dialogPost.showModal();
@@ -246,6 +303,9 @@ function simpanBarang(fotoData) {
   const item = {
     id: Date.now(),
     nama: document.getElementById('post-nama').value.trim(),
+    merk: document.getElementById('post-merk').value.trim(),
+    ukuran: document.getElementById('post-ukuran').value.trim(),
+    kondisi: document.getElementById('post-kondisi').value,
     harga: Number(document.getElementById('post-harga').value),
     kategori: document.getElementById('post-kategori').value,
     status: document.getElementById('post-status').value,
