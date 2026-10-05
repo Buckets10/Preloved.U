@@ -14,7 +14,11 @@ Mahasiswa (sebagai penjual maupun pembeli) di lingkungan kampus.
 
 Marketplace khusus mahasiswa untuk memposting, mencari, dan menghubungi penjual barang bekas, lengkap dengan kategori, status, dan detail kondisi barang.
 
+<<<<<<< HEAD
 ## ✅ Fitur yang Sudah Ada
+=======
+## ✅ Fitur yang Sudah Ada 
+>>>>>>> 277fdc48f23afe0379e561063d501934ebef5116
 
 - Daftar akun dan login (wajib punya akun sebelum memposting barang)
 - Post barang: nama, merk, ukuran, kondisi, harga, kategori, status, nomor WA, deskripsi, foto
@@ -30,7 +34,10 @@ Marketplace khusus mahasiswa untuk memposting, mencari, dan menghubungi penjual 
 - Backend dan database (data saat ini hanya tersimpan di browser)
 - Login yang aman (password di-hash di server)
 - Verifikasi email kampus
+<<<<<<< HEAD
 - Metode Pembayaran
+=======
+>>>>>>> 277fdc48f23afe0379e561063d501934ebef5116
 - Rating sederhana setelah transaksi
 - Chat langsung di platform (fitur lanjutan)
 - Deployment
@@ -46,7 +53,11 @@ Marketplace khusus mahasiswa untuk memposting, mencari, dan menghubungi penjual 
 
 1. Clone repository ini
 2. Pastikan folder `img/` berisi semua gambar barang
+<<<<<<< HEAD
 3. Buka `Preloved.U.html` langsung di browser. Data contoh tetap tampil saat dibuka langsung maupun melalui server lokal.
+=======
+3. Buka `index.html` di browser
+>>>>>>> 277fdc48f23afe0379e561063d501934ebef5116
 
 Tidak perlu instalasi tambahan.
 
@@ -55,10 +66,16 @@ Tidak perlu instalasi tambahan.
 ## 📂 Struktur Folder
 
 ```
+<<<<<<< HEAD
 ├── Week2.html     # struktur halaman
 ├── style.css      # tampilan dan responsive layout
 ├── script.js      # interaksi (cari, kategori, detail, akun, post barang)
 ├── barang.json    # data barang untuk server lokal
+=======
+├── index.html     # struktur halaman
+├── style.css      # tampilan dan responsive layout
+├── script.js      # interaksi (cari, kategori, detail, akun, post barang)
+>>>>>>> 277fdc48f23afe0379e561063d501934ebef5116
 ├── img/           # foto barang
 └── README.md
 ```
@@ -72,6 +89,7 @@ Tidak perlu instalasi tambahan.
 ## 📅 Progres
 
 - | 1 | Kickoff: Product Canvas dan repository | Selesai |
+<<<<<<< HEAD
 - | 2 | Sprint 01 : HTML semantic dan CSS responsive | Selesai |
 - | 3 | Sprint 02 : interaksi dengan JavaScript | Selesai |
 - | 4 | Sprint 03: Fetch API, loading & error state | Selesai |
@@ -79,3 +97,11 @@ Tidak perlu instalasi tambahan.
 ## 📄 Mata Kuliah
 
 Pemrograman Web, Teknik Informatika
+=======
+- | 2 | Task 2 : HTML semantic dan CSS responsive | Selesai |
+- | 3 | Task 3 : interaksi dengan JavaScript | Selesai |
+
+## 📄 Mata Kuliah
+
+Pemrograman Web, Teknik Informatika
+>>>>>>> 277fdc48f23afe0379e561063d501934ebef5116
