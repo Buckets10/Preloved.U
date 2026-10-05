@@ -1,11 +1,3 @@
-const DATA_DUMMY = [
-  { id: 1,  nama: 'Buku Pemrograman Web',            harga: 50000,  kategori: 'buku',       status: 'tersedia', wa: '6282359311200', merk: 'Penerbit lokal', ukuran: 'A5, ±250 halaman', kondisi: 'Bagus',       deskripsi: 'Buku bekas kondisi baik, tanpa coretan.', foto: 'img/buku 1.jpg' },
-  { id: 2,  nama: 'Kipas Angin Kecil',               harga: 75000,  kategori: 'elektronik', status: 'nego',     wa: '6282359311200', merk: 'Metro',          ukuran: '20 cm',            kondisi: 'Bagus',       deskripsi: 'Kipas angin mini, masih berfungsi normal.', foto: 'img/PASFOT.jpeg' },
-  { id: 3,  nama: 'Mouse Wireless',                  harga: 35000,  kategori: 'elektronik', status: 'tersedia', wa: '6282359311200', merk: 'Logitech',       ukuran: 'Standar (±10 cm)', kondisi: 'Seperti baru', deskripsi: 'Mouse wireless, baterai baru diganti.', foto: 'img/mouse.jpg' },
-  { id: 4,  nama: 'Rak Buku Kayu',                   harga: 120000, kategori: 'perabot',    status: 'tersedia', wa: '6282359311200', merk: 'Tanpa merk',     ukuran: '80 x 30 x 120 cm', kondisi: 'Bagus',       deskripsi: 'Rak 4 tingkat, cocok untuk kamar kos.', foto: 'img/rakbuku.jpg' },
-  { id: 5,  nama: 'Meja Belajar Lipat',              harga: 90000,  kategori: 'perabot',    status: 'tersedia', wa: '6282359311200', merk: 'Tanpa merk',     ukuran: '60 x 40 cm',       kondisi: 'Layak pakai', deskripsi: 'Meja lipat ringan, mudah dibawa pindahan.', foto: 'img/Mejalipat.jpg' },
-];
-
 const namaStatus   = { tersedia: 'Tersedia', nego: 'Nego', terjual: 'Terjual' };
 const namaKategori = { buku: 'Buku', elektronik: 'Elektronik', perabot: 'Perabot Kos' };
 const emojiKategori = { buku: '📚', elektronik: '🔌', perabot: '🪑' };
@@ -17,23 +9,29 @@ function baca(kunci, cadangan) {
 }
 function simpanKe(kunci, nilai) {
   try { localStorage.setItem(kunci, JSON.stringify(nilai)); }
-  catch { tampilToast('Penyimpanan browser penuh, data tidak bisa disimpan permanen.'); }
+  catch { alert('Penyimpanan browser penuh, data tidak bisa disimpan permanen.'); }
 }
 
-let postingan = baca('mk_posts', []);      
-let wishlist  = baca('mk_wishlist', []);   
-let userLogin = baca('mk_user', null);     
-let daftarAkun = baca('mk_accounts', []);  
+// Barang dari API (file JSON lokal). Diisi oleh muatBarang() lewat fetch().
+const API_URL = 'barang.json';
+let dataAPI = [];
+let postingan = baca('mk_posts', []);      // barang yang diposting user
+let wishlist  = baca('mk_wishlist', []);   // daftar id barang favorit
+let userLogin = baca('mk_user', null);     // nama user yang login
+let daftarAkun = baca('mk_accounts', []);  // akun yang sudah terdaftar
 let kategoriAktif = 'semua';
 let kataKunci = '';
 
-const semuaBarang = () => [...DATA_DUMMY, ...postingan];
+const semuaBarang = () => [...dataAPI, ...postingan];
 
 const searchInput  = document.getElementById('search');
 const btnCari      = document.getElementById('btn-cari');
 const productList  = document.getElementById('product-list');
 const hasilInfo    = document.getElementById('hasil-info');
 const emptyMessage = document.getElementById('empty-message');
+const loadingMessage = document.getElementById('loading-message');
+const errorMessage   = document.getElementById('error-message');
+const btnCobaLagi    = document.getElementById('btn-coba-lagi');
 const chips        = document.querySelectorAll('.chip');
 
 const navBeranda  = document.getElementById('nav-beranda');
@@ -51,23 +49,32 @@ const formDaftar   = document.getElementById('form-daftar');
 const formLogin    = document.getElementById('form-login');
 const formPost     = document.getElementById('form-post');
 
+// ===== AMBIL DATA BARANG DARI API (Fetch API + async/await) =====
+async function muatBarang() {
+  loadingMessage.hidden = false;
+  errorMessage.hidden = true;
+  productList.hidden = true;
 
-const toast = document.getElementById('toast');
-let timerToast;
-function tampilToast(pesan) {
-  toast.textContent = pesan;
-  toast.hidden = false;
-  clearTimeout(timerToast);
-  timerToast = setTimeout(() => { toast.hidden = true; }, 3000);
+  try {
+    if (window.location.protocol === 'file:') {
+      dataAPI = JSON.parse(document.getElementById('barang-data').textContent);
+    } else {
+      const response = await fetch(API_URL);
+      if (!response.ok) throw new Error('Server merespons status ' + response.status);
+      dataAPI = await response.json();
+    }
+
+    productList.hidden = false;
+    render();
+  } catch (error) {
+    console.error('Gagal mengambil data:', error);
+    errorMessage.hidden = false;
+  } finally {
+    loadingMessage.hidden = true;
+  }
 }
 
-
-function buatPlaceholder(kategori) {
-  const kosong = document.createElement('div');
-  kosong.className = 'img-placeholder';
-  kosong.textContent = emojiKategori[kategori];
-  return kosong;
-}
+btnCobaLagi.addEventListener('click', muatBarang);
 
 function buatKartu(item) {
   const card = document.createElement('article');
@@ -79,10 +86,12 @@ function buatKartu(item) {
     img.src = item.foto;
     img.alt = item.nama;
     img.loading = 'lazy';
-    img.addEventListener('error', () => img.replaceWith(buatPlaceholder(item.kategori)));
     card.appendChild(img);
   } else {
-    card.appendChild(buatPlaceholder(item.kategori));
+    const kosong = document.createElement('div');
+    kosong.className = 'img-placeholder';
+    kosong.textContent = emojiKategori[item.kategori];
+    card.appendChild(kosong);
   }
 
   const wish = document.createElement('button');
@@ -141,7 +150,7 @@ function jalankanCari() {
   render();
 }
 btnCari.addEventListener('click', jalankanCari);
-searchInput.addEventListener('input', jalankanCari);   
+searchInput.addEventListener('input', jalankanCari);   // hasil langsung berubah saat mengetik
 
 chips.forEach((chip) => {
   chip.addEventListener('click', () => {
@@ -185,10 +194,12 @@ function bukaDetail(item) {
     const img = document.createElement('img');
     img.src = item.foto;
     img.alt = item.nama;
-    img.addEventListener('error', () => img.replaceWith(buatPlaceholder(item.kategori)));
     gambarBox.appendChild(img);
   } else {
-    gambarBox.appendChild(buatPlaceholder(item.kategori));
+    const kosong = document.createElement('div');
+    kosong.className = 'img-placeholder';
+    kosong.textContent = emojiKategori[item.kategori];
+    gambarBox.appendChild(kosong);
   }
 
   document.getElementById('detail-nama').textContent = item.nama;
@@ -209,7 +220,7 @@ function bukaDetail(item) {
   dialogDetail.showModal();
 }
 
-
+// ===== AKUN: DAFTAR & LOGIN =====
 function updateTombolLogin() {
   navLogin.textContent = userLogin ? `Logout (${userLogin})` : 'Login';
   liDaftar.hidden = !!userLogin;   // tombol Daftar hilang kalau sudah login
@@ -240,13 +251,13 @@ navLogin.addEventListener('click', (e) => {
     userLogin = null;
     simpanKe('mk_user', null);
     updateTombolLogin();
-    tampilToast('Kamu sudah logout.');
+    alert('Kamu sudah logout.');
   } else {
     bukaLogin('Masuk untuk memposting barang.');
   }
 });
 
-
+// pindah antar dialog
 document.getElementById('ke-daftar').addEventListener('click', () => { dialogLogin.close(); bukaDaftar(); });
 document.getElementById('ke-login').addEventListener('click', () => { dialogDaftar.close(); bukaLogin('Masuk untuk memposting barang.'); });
 
@@ -283,10 +294,9 @@ formLogin.addEventListener('submit', (e) => {
   simpanKe('mk_user', userLogin);
   updateTombolLogin();
   dialogLogin.close();
-  tampilToast(`Selamat datang, ${akun.nama}!`);
 });
 
-
+// ===== POST BARANG =====
 navPost.addEventListener('click', (e) => {
   e.preventDefault();
   if (!userLogin) {
@@ -303,8 +313,9 @@ formPost.addEventListener('submit', (e) => {
   if (foto) {
     const reader = new FileReader();
     reader.onload = () => {
+      // foto disimpan sebagai teks (dataURL); kalau terlalu besar, dilewati agar penyimpanan tidak penuh
       const terlaluBesar = reader.result.length > 700000;
-      if (terlaluBesar) tampilToast('Foto terlalu besar, barang diposting tanpa foto. Pakai foto di bawah ±500 KB.');
+      if (terlaluBesar) alert('Foto terlalu besar, barang diposting tanpa foto. Pakai foto di bawah ±500 KB.');
       simpanBarang(terlaluBesar ? null : reader.result);
     };
     reader.readAsDataURL(foto);
@@ -340,7 +351,6 @@ function simpanBarang(fotoData) {
   dialogPost.close();
   render();
   productList.querySelector(`[data-id="${item.id}"]`)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  tampilToast('Barang berhasil diposting!');
 }
 
 document.querySelectorAll('dialog').forEach((dlg) => {
@@ -348,9 +358,10 @@ document.querySelectorAll('dialog').forEach((dlg) => {
     btn.addEventListener('click', () => dlg.close())
   );
   dlg.addEventListener('click', (e) => {
-    if (e.target === dlg) dlg.close();   
+    if (e.target === dlg) dlg.close();   // klik area gelap di luar dialog
   });
 });
 
+// ===== MULAI =====
 updateTombolLogin();
-render();
+muatBarang();

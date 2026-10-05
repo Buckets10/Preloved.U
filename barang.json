@@ -1,0 +1,7 @@
+[
+  { "id": 1, "nama": "Buku Pemrograman Web", "harga": 50000,  "kategori": "buku",       "status": "tersedia", "wa": "6281234438020", "merk": "Penerbit lokal", "ukuran": "A5, ±250 halaman", "kondisi": "Bagus",       "deskripsi": "Buku bekas kondisi baik, tanpa coretan.",    "foto": "img/buku 1.jpg" },
+  { "id": 2, "nama": "Kipas Angin Kecil",    "harga": 75000,  "kategori": "elektronik", "status": "nego",     "wa": "6281234438020", "merk": "Miyako",         "ukuran": "20 cm",            "kondisi": "Bagus",       "deskripsi": "Kipas angin mini, masih berfungsi normal.", "foto": "img/PASFOT.jpeg" },
+  { "id": 3, "nama": "Mouse Wireless",       "harga": 35000,  "kategori": "elektronik", "status": "tersedia", "wa": "6281234438020", "merk": "Logitech",       "ukuran": "Standar (±10 cm)", "kondisi": "Seperti baru", "deskripsi": "Mouse wireless, baterai baru diganti.",      "foto": "img/mouse.jpg" },
+  { "id": 4, "nama": "Rak Buku Kayu",        "harga": 120000, "kategori": "perabot",    "status": "tersedia", "wa": "6281234438020", "merk": "Tanpa merk",     "ukuran": "80 x 30 x 120 cm", "kondisi": "Bagus",       "deskripsi": "Rak 4 tingkat, cocok untuk kamar kos.",      "foto": "img/rakbuku.jpg" },
+  { "id": 5, "nama": "Meja Belajar Lipat",   "harga": 90000,  "kategori": "perabot",    "status": "tersedia", "wa": "6281234438020", "merk": "Tanpa merk",     "ukuran": "60 x 40 cm",       "kondisi": "Layak pakai", "deskripsi": "Meja lipat ringan, mudah dibawa pindahan.", "foto": "img/Mejalipat.jpg" }
+]
