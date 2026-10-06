@@ -1,4 +1,4 @@
-# Preloved.U — Marketplace Barang Bekas Mahasiswa
+# 🛍️ Preloved.U — Marketplace Barang Bekas Mahasiswa
 
 Platform jual-beli barang bekas khusus mahasiswa di lingkungan kampus.
 
@@ -14,11 +14,7 @@ Mahasiswa (sebagai penjual maupun pembeli) di lingkungan kampus.
 
 Marketplace khusus mahasiswa untuk memposting, mencari, dan menghubungi penjual barang bekas, lengkap dengan kategori, status, dan detail kondisi barang.
 
-<<<<<<< HEAD
-## ✅ Fitur yang Sudah Ada
-=======
-## ✅ Fitur yang Sudah Ada 
->>>>>>> 277fdc48f23afe0379e561063d501934ebef5116
+## ✅ Fitur yang Sudah Ada (Sprint 02)
 
 - Daftar akun dan login (wajib punya akun sebelum memposting barang)
 - Post barang: nama, merk, ukuran, kondisi, harga, kategori, status, nomor WA, deskripsi, foto
@@ -29,15 +25,17 @@ Marketplace khusus mahasiswa untuk memposting, mencari, dan menghubungi penjual 
 - Wishlist (simpan barang favorit)
 - Hubungi penjual lewat WhatsApp
 
+## ✅ Fitur Tambahan (Sprint 03)
+
+- Data barang diambil lewat Fetch API dari `barang.json` (`fetch` + `async/await`)
+- Loading state saat data sedang diambil
+- Error handling + tombol "Coba Lagi" kalau pengambilan data gagal
+
 ## 🚧 Belum Ada / Rencana
 
-- Backend dan database (data saat ini hanya tersimpan di browser)
+- Backend sungguhan dan database (barang masih dari file JSON lokal, posting & akun masih di localStorage browser)
 - Login yang aman (password di-hash di server)
 - Verifikasi email kampus
-<<<<<<< HEAD
-- Metode Pembayaran
-=======
->>>>>>> 277fdc48f23afe0379e561063d501934ebef5116
 - Rating sederhana setelah transaksi
 - Chat langsung di platform (fitur lanjutan)
 - Deployment
@@ -51,57 +49,50 @@ Marketplace khusus mahasiswa untuk memposting, mencari, dan menghubungi penjual 
 
 ## ▶️ Cara Menjalankan
 
-1. Clone repository ini
-2. Pastikan folder `img/` berisi semua gambar barang
-<<<<<<< HEAD
-3. Buka `Preloved.U.html` langsung di browser. Data contoh tetap tampil saat dibuka langsung maupun melalui server lokal.
-=======
-3. Buka `index.html` di browser
->>>>>>> 277fdc48f23afe0379e561063d501934ebef5116
+Halaman ini mengambil data lewat `fetch()`. Kalau `Preloved.U.html` dibuka langsung dengan klik dua kali (`file://`), browser memblokir `fetch()`, sehingga aplikasi hanya memakai data cadangan yang ada di dalam HTML. Supaya Fetch API benar-benar berjalan, jalankan lewat server lokal:
 
-Tidak perlu instalasi tambahan.
+**Opsi 1 — VS Code Live Server (termudah)**
+1. Install ekstensi "Live Server" di VS Code
+2. Klik kanan `Preloved.U.html` → "Open with Live Server"
+
+**Opsi 2 — Python**
+```bash
+python -m http.server
+```
+Lalu buka `http://localhost:8000/Preloved.U.html` di browser.
+
+Pastikan folder `img/` dan file `barang.json` ikut ter-upload ke GitHub.
 
 > **Catatan:** Akun, barang yang diposting, dan favorit saat ini disimpan di `localStorage` browser masing-masing, jadi hanya berlaku di perangkat yang dipakai. Ini simulasi untuk tahap frontend dan akan diganti database saat masuk materi backend.
 
 ## 📂 Struktur Folder
 
 ```
-<<<<<<< HEAD
-├── Week2.html     # struktur halaman
-├── style.css      # tampilan dan responsive layout
-├── script.js      # interaksi (cari, kategori, detail, akun, post barang)
-├── barang.json    # data barang untuk server lokal
-=======
-├── index.html     # struktur halaman
-├── style.css      # tampilan dan responsive layout
-├── script.js      # interaksi (cari, kategori, detail, akun, post barang)
->>>>>>> 277fdc48f23afe0379e561063d501934ebef5116
-├── img/           # foto barang
+├── Preloved.U.html  # struktur halaman
+├── style.css        # tampilan dan responsive layout
+├── script.js        # interaksi + fetch API
+├── barang.json      # data barang (sumber fetch)
+├── img/             # foto barang
 └── README.md
 ```
 
 ## 👥 Tim Pengembang
 
-- | _Mukhammad Farhan Prayoga_ | _220_ |
-- | _Zinedine Rivan Abdus Syukur_ | _364_ |
-- | _Rafi Chesta Adabi_ | _376_ |
+| Nama | NIM |
+|---|---|
+| Mukhammad Farhan Prayoga | 220 |
+| Zinedine Rivan Abdus Syukur | 364 |
+| Rafi Chesta Adabi | 376 |
 
 ## 📅 Progres
 
-- | 1 | Kickoff: Product Canvas dan repository | Selesai |
-<<<<<<< HEAD
-- | 2 | Sprint 01 : HTML semantic dan CSS responsive | Selesai |
-- | 3 | Sprint 02 : interaksi dengan JavaScript | Selesai |
-- | 4 | Sprint 03: Fetch API, loading & error state | Selesai |
+| Pertemuan | Sprint | Status |
+|---|---|---|
+| 1 | Kickoff: Product Canvas dan repository | Selesai |
+| 2 | Sprint 01: HTML semantic dan CSS responsive | Selesai |
+| 3 | Sprint 02: interaksi dengan JavaScript | Selesai |
+| 4 | Sprint 03: Fetch API, loading & error state | Selesai |
 
 ## 📄 Mata Kuliah
 
 Pemrograman Web, Teknik Informatika
-=======
-- | 2 | Task 2 : HTML semantic dan CSS responsive | Selesai |
-- | 3 | Task 3 : interaksi dengan JavaScript | Selesai |
-
-## 📄 Mata Kuliah
-
-Pemrograman Web, Teknik Informatika
->>>>>>> 277fdc48f23afe0379e561063d501934ebef5116
