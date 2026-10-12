@@ -42,12 +42,21 @@
       <button type="button" class="chip" data-kategori="favorit">♥ Favorit</button>
     </section>
 
-    <!-- Loading state saat fetch API masih berjalan -->
-    <p id="loading-message" class="loading-message">⏳ Memuat barang...</p>
+    <!-- Status data: muncul setelah fetch berhasil + tombol muat ulang -->
+    <div class="data-bar" id="data-bar" hidden>
+      <span class="data-status" id="data-status"></span>
+      <button type="button" class="btn-refresh" id="btn-refresh">↻ Muat Ulang</button>
+    </div>
 
-    <!-- Error state kalau fetch API gagal -->
-    <div id="error-message" class="error-message" hidden>
-      <p>Gagal memuat data barang.</p>
+    <!-- LOADING: tampil saat fetch masih berjalan -->
+    <p id="loading-message" class="loading-message" role="status">
+      <span class="spinner" aria-hidden="true"></span> Mengambil data barang...
+    </p>
+
+    <!-- ERROR: tampil kalau fetch gagal -->
+    <div id="error-message" class="error-message" role="alert" hidden>
+      <p class="error-title">Gagal memuat data barang.</p>
+      <p class="error-detail" id="error-detail"></p>
       <button type="button" id="btn-coba-lagi" class="btn btn-primary">Coba Lagi</button>
     </div>
 

@@ -47,21 +47,14 @@ Marketplace khusus mahasiswa untuk memposting, mencari, dan menghubungi penjual 
 - **Database:** belum (rencana: MySQL)
 - **Version Control:** Git & GitHub
 
-## ▶️ Cara Menjalankan
+▶️ Cara Menjalankan
 
-Halaman ini mengambil data lewat `fetch()`. Kalau `Preloved.U.html` dibuka langsung dengan klik dua kali (`file://`), browser memblokir `fetch()`, sehingga aplikasi hanya memakai data cadangan yang ada di dalam HTML. Supaya Fetch API benar-benar berjalan, jalankan lewat server lokal:
+Disarankan lewat server lokal supaya fetch() ke barang.json berjalan sungguhan:
 
-**Opsi 1 — VS Code Live Server (termudah)**
-1. Install ekstensi "Live Server" di VS Code
-2. Klik kanan `Preloved.U.html` → "Open with Live Server"
+VS Code: install ekstensi "Live Server", klik kanan index.html, pilih "Open with Live Server"
+Terminal: jalankan python -m http.server, lalu buka http://localhost:8000
 
-**Opsi 2 — Python**
-```bash
-python -m http.server
-```
-Lalu buka `http://localhost:8000/Preloved.U.html` di browser.
-
-Pastikan folder `img/` dan file `barang.json` ikut ter-upload ke GitHub.
+Kalau index.html dibuka langsung dengan dobel klik, browser memblokir fetch(). Dalam kasus itu halaman memakai data cadangan yang tertanam di index.html (tag <script id="barang-data">) dan badge status akan menyebutkannya.
 
 > **Catatan:** Akun, barang yang diposting, dan favorit saat ini disimpan di `localStorage` browser masing-masing, jadi hanya berlaku di perangkat yang dipakai. Ini simulasi untuk tahap frontend dan akan diganti database saat masuk materi backend.
 

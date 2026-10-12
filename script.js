@@ -32,6 +32,10 @@ const emptyMessage = document.getElementById('empty-message');
 const loadingMessage = document.getElementById('loading-message');
 const errorMessage   = document.getElementById('error-message');
 const btnCobaLagi    = document.getElementById('btn-coba-lagi');
+const errorDetail    = document.getElementById('error-detail');
+const dataBar        = document.getElementById('data-bar');
+const dataStatus     = document.getElementById('data-status');
+const btnRefresh     = document.getElementById('btn-refresh');
 const chips        = document.querySelectorAll('.chip');
 
 const navBeranda  = document.getElementById('nav-beranda');
@@ -50,24 +54,46 @@ const formLogin    = document.getElementById('form-login');
 const formPost     = document.getElementById('form-post');
 
 // ===== AMBIL DATA BARANG DARI API (Fetch API + async/await) =====
+// Task 01: kirim request ke API lalu baca response sebagai JSON
+async function ambilData() {
+  try {
+    const response = await fetch(API_URL);
+    if (!response.ok) throw new Error('Server merespons status ' + response.status);
+    return { data: await response.json(), sumber: API_URL };
+  } catch (error) {
+    // Halaman dibuka dobel klik (file://) -> browser memblokir fetch.
+    // Pakai data cadangan yang tertanam di index.html supaya tetap bisa dilihat.
+    if (window.location.protocol === 'file:') {
+      const cadangan = JSON.parse(document.getElementById('barang-data').textContent);
+      return { data: cadangan, sumber: 'data cadangan (halaman dibuka langsung)' };
+    }
+    throw error;
+  }
+}
+
+// Task 03: tiga kondisi - LOADING, SUCCESS, ERROR
 async function muatBarang() {
+  // LOADING
   loadingMessage.hidden = false;
   errorMessage.hidden = true;
+  dataBar.hidden = true;
   productList.hidden = true;
+  emptyMessage.hidden = true;
 
   try {
-    if (window.location.protocol === 'file:') {
-      dataAPI = JSON.parse(document.getElementById('barang-data').textContent);
-    } else {
-      const response = await fetch(API_URL);
-      if (!response.ok) throw new Error('Server merespons status ' + response.status);
-      dataAPI = await response.json();
-    }
+    // Task 02: data hasil fetch disimpan lalu ditampilkan ke DOM lewat render()
+    const hasil = await ambilData();
+    dataAPI = hasil.data;
 
+    // SUCCESS
     productList.hidden = false;
+    dataBar.hidden = false;
+    dataStatus.textContent = `● Data berhasil dimuat (${dataAPI.length} barang dari ${hasil.sumber})`;
     render();
   } catch (error) {
+    // ERROR
     console.error('Gagal mengambil data:', error);
+    errorDetail.textContent = 'Pastikan file barang.json ada dan halaman dijalankan lewat server (misal Live Server), lalu coba lagi.';
     errorMessage.hidden = false;
   } finally {
     loadingMessage.hidden = true;
@@ -75,6 +101,7 @@ async function muatBarang() {
 }
 
 btnCobaLagi.addEventListener('click', muatBarang);
+btnRefresh.addEventListener('click', muatBarang);
 
 function buatKartu(item) {
   const card = document.createElement('article');

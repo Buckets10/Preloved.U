@@ -280,7 +280,7 @@ footer {
   text-align: center;
 }
 
-/* ===== LOADING & ERROR STATE (fetch API) ===== */
+/* ===== LOADING, SUCCESS & ERROR STATE (fetch API) ===== */
 .loading-message,
 .error-message {
   max-width: 1100px;
@@ -290,9 +290,77 @@ footer {
   color: var(--text-muted);
 }
 
-.error-message p {
+.spinner {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  margin-right: 8px;
+  vertical-align: -3px;
+  border: 3px solid var(--border);
+  border-top-color: var(--navy);
+  border-radius: 50%;
+  animation: putar 0.8s linear infinite;
+}
+
+@keyframes putar {
+  to { transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spinner { animation-duration: 3s; }
+}
+
+.error-title {
   color: #C0392B;
-  margin-bottom: 12px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.error-detail {
+  font-size: 0.9rem;
+  margin-bottom: 14px;
+}
+
+.data-bar {
+  max-width: 1100px;
+  margin: 20px auto 0;
+  padding: 0 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.data-status {
+  padding: 5px 12px;
+  border-radius: 999px;
+  background-color: var(--green-bg);
+  color: var(--green);
+  font-size: 0.82rem;
+  font-weight: 500;
+}
+
+.btn-refresh {
+  padding: 6px 14px;
+  border: 1.5px solid var(--border);
+  border-radius: 999px;
+  background-color: var(--white);
+  color: var(--navy);
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.btn-refresh:hover {
+  border-color: var(--navy);
+}
+
+@media (max-width: 640px) {
+  .loading-message,
+  .error-message,
+  .data-bar {
+    padding: 0 20px;
+  }
 }
 
 /* ===== BUTTON UMUM (dialog) ===== */
