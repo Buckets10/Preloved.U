@@ -13,7 +13,7 @@ $q             = ambilGet('q');
 $kategoriAktif = kategoriValid(ambilGet('kategori', 'semua'));
 $modeFavorit   = ($kategoriAktif === 'favorit');
 
-// ----- DATA: baca barang.json menjadi array -----
+// ----- DATA: baca barang.json menjadi object Barang (Task 01) -----
 $barang = bacaBarang();
 $galat  = '';
 
@@ -22,7 +22,7 @@ if ($barang === null) {            // CONDITIONAL: data gagal dibaca
     $barang = [];
 }
 
-// ----- PROSES: saring data sesuai pencarian dan kategori -----
+// ----- PROSES: saring data sesuai pencarian dan kategori (Task 02: method cocok()) -----
 $hasil  = filterBarang($barang, $q, $kategoriAktif);
 $jumlah = count($hasil);
 ?>
@@ -84,13 +84,13 @@ $jumlah = count($hasil);
       </div>
     <?php endif; ?>
 
-    <!-- Daftar barang: dicetak oleh PHP lewat LOOP, bukan ditulis satu per satu -->
+    <!-- Daftar barang: dicetak oleh PHP lewat Object & Method (Task 03: OBJECT -> METHOD -> PHP -> HTML) -->
     <section class="product-list" id="product-list">
       <h1>Barang Tersedia</h1>
       <p id="hasil-info" class="detail-meta"><?= $modeFavorit ? '' : 'Menampilkan ' . $jumlah . ' barang' ?></p>
 
       <?php foreach ($hasil as $item): ?>
-        <?php renderKartu($item, $modeFavorit); ?>
+        <?php $item->renderKartu($modeFavorit); ?>
       <?php endforeach; ?>
     </section>
 

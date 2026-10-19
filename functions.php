@@ -38,8 +38,11 @@ function formatRupiah(float $angka): string
     return 'Rp ' . number_format($angka, 0, ',', '.');
 }
 
+// ===== REQUIRE CLASS BARANG (OOP - Task 01 & Task 02) =====
+require_once __DIR__ . '/Barang.php';
+
 // ===== FUNCTION: baca data dari barang.json =====
-// Mengembalikan array barang, atau null kalau file tidak ada / isinya rusak.
+// Mengembalikan array of Barang (Object), atau null kalau file tidak ada / isinya rusak.
 function bacaBarang(): ?array
 {
     if (!is_readable(FILE_BARANG)) {
@@ -52,7 +55,15 @@ function bacaBarang(): ?array
         return null;
     }
 
-    return $data;
+    // Task 01: Instansiasi object dari Class Barang
+    $daftarBarang = [];
+    foreach ($data as $item) {
+        if (is_array($item)) {
+            $daftarBarang[] = new Barang($item);
+        }
+    }
+
+    return $daftarBarang;
 }
 
 // ===== FUNCTION: ambil input dari URL dengan aman =====
@@ -71,23 +82,21 @@ function kategoriValid(string $kode): string
 }
 
 // ===== FUNCTION: filter barang (pencarian + kategori) =====
-// Proses ini dikerjakan di SERVER, jadi browser hanya menerima hasil akhirnya.
+// Menggunakan method cocok() yang terenkapsulasi di dalam object Barang (Task 02)
 function filterBarang(array $barang, string $q, string $kategori): array
 {
     $hasil = [];
 
     foreach ($barang as $item) {
-        $labelKategori = KATEGORI[$item['kategori'] ?? '']['label'] ?? '';
-        $teks = ($item['nama'] ?? '') . ' ' . ($item['deskripsi'] ?? '') . ' ' . $labelKategori;
-
-        $cocokKata = ($q === '') || stripos($teks, $q) !== false;
-
-        // 'favorit' disimpan di browser (localStorage), jadi server tidak memfilter kategori untuk mode itu
-        $cocokKategori = in_array($kategori, ['semua', 'favorit'], true)
-            || ($item['kategori'] ?? '') === $kategori;
-
-        if ($cocokKata && $cocokKategori) {
-            $hasil[] = $item;
+        if ($item instanceof Barang) {
+            if ($item->cocok($q, $kategori)) {
+                $hasil[] = $item;
+            }
+        } elseif (is_array($item)) {
+            $obj = new Barang($item);
+            if ($obj->cocok($q, $kategori)) {
+                $hasil[] = $obj;
+            }
         }
     }
 
@@ -120,33 +129,12 @@ function pesanKosong(string $kategori, string $q): string
 }
 
 // ===== FUNCTION: cetak HTML satu kartu barang =====
-// PHP menghasilkan HTML-nya langsung, jadi tidak ditulis satu per satu secara manual.
-function renderKartu(array $item, bool $sembunyi = false): void
+// Delegasi ke method renderKartu() pada object Barang (Task 03)
+function renderKartu($item, bool $sembunyi = false): void
 {
-    $id        = (int) ($item['id'] ?? 0);
-    $nama      = (string) ($item['nama'] ?? '');
-    $kategori  = (string) ($item['kategori'] ?? 'buku');
-    $status    = (string) ($item['status'] ?? 'tersedia');
-    $foto      = (string) ($item['foto'] ?? '');
-    $emoji     = KATEGORI[$kategori]['emoji'] ?? '📦';
-    $labelStatus = NAMA_STATUS[$status] ?? ucfirst($status);
-    $terjual   = ($status === 'terjual');
-    ?>
-    <article class="product-card<?= $terjual ? ' product-card--terjual' : '' ?>"
-             id="barang-<?= $id ?>" data-id="<?= $id ?>" data-kategori="<?= e($kategori) ?>"<?= $sembunyi ? ' hidden' : '' ?>>
-
-      <?php if ($foto !== ''): ?>
-        <img src="<?= e($foto) ?>" alt="<?= e($nama) ?>" loading="lazy">
-      <?php else: ?>
-        <div class="img-placeholder"><?= $emoji ?></div>
-      <?php endif; ?>
-
-      <button type="button" class="btn-wish" aria-label="Tambah ke favorit">♡</button>
-
-      <h2><?= e($nama) ?></h2>
-      <p class="price"><?= formatRupiah((float) ($item['harga'] ?? 0)) ?></p>
-      <span class="status status--<?= e($status) ?>"><?= e($labelStatus) ?></span>
-      <button type="button" class="btn-detail">Lihat Detail</button>
-    </article>
-    <?php
+    if ($item instanceof Barang) {
+        $item->renderKartu($sembunyi);
+    } elseif (is_array($item)) {
+        (new Barang($item))->renderKartu($sembunyi);
+    }
 }

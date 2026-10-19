@@ -36,10 +36,34 @@ Marketplace khusus mahasiswa untuk memposting, mencari, dan menghubungi penjual 
 - Output HTML di-escape dengan `htmlspecialchars` untuk mencegah XSS
 - Pesan error dari server kalau `barang.json` tidak ada atau rusak
 
+## Sprint 05 (Pertemuan 6: Object-Oriented Programming dengan PHP)
+
+Implementasi konsep OOP (Pemrograman Berorientasi Objek) pada PHP untuk pengelolaan data dan konten dinamis:
+
+### 🧩 Task 01: Create a Class (CLASS → OBJECT)
+- Membuat class `Barang` (`Barang.php`) yang merepresentasikan entitas data barang di marketplace Preloved.U.
+- Menentukan property data: `$id`, `$nama`, `$harga`, `$kategori`, `$status`, `$wa`, `$merk`, `$ukuran`, `$kondisi`, `$deskripsi`, `$foto`.
+- Instansiasi object dilakukan saat data dibaca dari `barang.json` melalui `bacaBarang()`, menghasilkan kumpulan object `Barang`.
+- Data barang dapat diakses dengan aman melalui getter methods.
+
+### ⚙️ Task 02: Add Properties & Methods (OBJECT = DATA + BEHAVIOR)
+- Menambahkan method/behavior pada class `Barang`:
+  - Getter: `getId()`, `getNama()`, `getHarga()`, `getKategori()`, `getStatus()`, `getWa()`, `getMerk()`, `getUkuran()`, `getKondisi()`, `getDeskripsi()`, `getFoto()`.
+  - Format & Tampilan: `getHargaFormat()` (format Rupiah), `getLabelStatus()`, `getLabelKategori()`, `getEmojiKategori()`, `hasFoto()`, `isTerjual()`.
+  - Integrasi Komunikasi: `getLinkWa()` (menghasilkan tautan langsung WhatsApp dengan template pesan).
+  - Enkapsulasi Logika: method `cocok($q, $kategori)` untuk memproses pencarian kata kunci dan filter kategori langsung di level object.
+  - Serialisasi: `toArray()` dan `jsonSerialize()` (`JsonSerializable`) agar sinkronisasi data ke `script.js` tetap berjalan mulus.
+
+### 🎨 Task 03: Generate Dynamic Content with Object (OBJECT → PHP → HTML)
+- Halaman `index.php` memproses data langsung dari object `Barang`.
+- Menghasilkan kartu produk secara dinamis menggunakan method `$item->renderKartu($modeFavorit)`.
+- Semua data tampilan (judul, harga, status, badge, gambar/placeholder, atribut data) bersumber dari method object.
+- Tampilan tetap konsisten dan presisi sesuai desain, dan interaksi frontend (dialog detail, favorit, tambah postingan) tetap berfungsi penuh.
+
 ## 🚧 Belum Ada / Rencana
 
-- Backend sungguhan dan database (barang masih dari file JSON lokal, posting & akun masih di localStorage browser)
-- Login yang aman (password di-hash di server)
+- Backend database sungguhan (MySQL / PostgreSQL)
+- Login yang aman (password di-hash di server dengan session/JWT)
 - Verifikasi email kampus
 - Rating sederhana setelah transaksi
 - Chat langsung di platform (fitur lanjutan)
@@ -48,8 +72,8 @@ Marketplace khusus mahasiswa untuk memposting, mencari, dan menghubungi penjual 
 ## 🛠️ Tech Stack
 
 - **Frontend:** HTML (semantic), CSS (responsive), JavaScript (DOM & event handling)
-- **Backend:** belum (rencana: PHP / Laravel)
-- **Database:** belum (rencana: MySQL)
+- **Backend:** PHP (OOP - Object Oriented Programming)
+- **Database:** JSON (rencana: MySQL)
 - **Version Control:** Git & GitHub
 
 ## ▶️ Cara Menjalankan
@@ -75,9 +99,10 @@ Buka `http://localhost:8000` di browser.
 ## 📂 Struktur Folder
 
 ```
-├── index.php        # halaman utama (PHP + HTML)
-├── functions.php    # variable, array, dan function PHP
-├── barang.json      # data barang (dibaca PHP)
+├── index.php        # halaman utama (PHP + HTML, render dinamis dari object)
+├── functions.php    # variable, array, konstanta, dan helper PHP
+├── Barang.php       # class Barang (OOP: property, method, dynamic render)
+├── barang.json      # data barang (sumber data object)
 ├── style.css        # tampilan dan responsive layout
 ├── script.js        # interaksi (popup, favorit, akun, post barang)
 ├── img/             # foto barang
@@ -102,6 +127,7 @@ Buka `http://localhost:8000` di browser.
 | 3 | Sprint 02: interaksi dengan JavaScript | Selesai |
 | 4 | Sprint 03: Fetch API, loading & error state | Selesai |
 | 5 | Sprint 04: server-side dengan PHP | Selesai |
+| 6 | Sprint 05: Object-Oriented Programming (OOP) dengan PHP | Selesai |
 
 ## 📄 Mata Kuliah
 
