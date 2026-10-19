@@ -1,7 +1,13 @@
-const namaStatus   = { tersedia: 'Tersedia', nego: 'Nego', terjual: 'Terjual' };
-const namaKategori = { buku: 'Buku', elektronik: 'Elektronik', perabot: 'Perabot Kos' };
+// ============================================================
+// script.js (Week 5)
+// Kartu barang utama sekarang dibuat oleh PHP (index.php).
+// JavaScript hanya mengurus: popup detail, favorit, akun, dan posting barang.
+// ============================================================
+
+const namaStatus    = { tersedia: 'Tersedia', nego: 'Nego', terjual: 'Terjual' };
+const namaKategori  = { buku: 'Buku', elektronik: 'Elektronik', perabot: 'Perabot Kos' };
 const emojiKategori = { buku: '📚', elektronik: '🔌', perabot: '🪑' };
-const formatRupiah = (n) => 'Rp ' + new Intl.NumberFormat('id-ID').format(n);
+const formatRupiah  = (n) => 'Rp ' + new Intl.NumberFormat('id-ID').format(n);
 
 function baca(kunci, cadangan) {
   try { return JSON.parse(localStorage.getItem(kunci)) ?? cadangan; }
@@ -12,33 +18,28 @@ function simpanKe(kunci, nilai) {
   catch { alert('Penyimpanan browser penuh, data tidak bisa disimpan permanen.'); }
 }
 
-// Barang dari API (file JSON lokal). Diisi oleh muatBarang() lewat fetch().
-const API_URL = 'barang.json';
-let dataAPI = [];
-let postingan = baca('mk_posts', []);      // barang yang diposting user
-let wishlist  = baca('mk_wishlist', []);   // daftar id barang favorit
-let userLogin = baca('mk_user', null);     // nama user yang login
-let daftarAkun = baca('mk_accounts', []);  // akun yang sudah terdaftar
-let kategoriAktif = 'semua';
-let kataKunci = '';
+// ===== DATA DARI PHP =====
+// PHP menaruh seluruh barang di <script id="barang-data"> (format JSON).
+const dataServer = JSON.parse(document.getElementById('barang-data').textContent);
 
-const semuaBarang = () => [...dataAPI, ...postingan];
+// Filter yang sedang aktif, juga ditentukan oleh PHP lewat atribut <body>
+const kategoriAktif = document.body.dataset.kategori || 'semua';
+const kataKunci     = (document.body.dataset.q || '').toLowerCase();
+const adaGalat      = document.body.dataset.galat === '1';
 
-const searchInput  = document.getElementById('search');
-const btnCari      = document.getElementById('btn-cari');
+// ===== DATA DARI BROWSER (localStorage) =====
+let postingan  = baca('mk_posts', []);      // barang yang diposting user
+let wishlist   = baca('mk_wishlist', []);   // id barang favorit
+let userLogin  = baca('mk_user', null);     // nama user yang login
+let daftarAkun = baca('mk_accounts', []);   // akun yang sudah terdaftar
+
+const semuaBarang = () => [...dataServer, ...postingan];
+
+// ===== ELEMEN =====
 const productList  = document.getElementById('product-list');
 const hasilInfo    = document.getElementById('hasil-info');
 const emptyMessage = document.getElementById('empty-message');
-const loadingMessage = document.getElementById('loading-message');
-const errorMessage   = document.getElementById('error-message');
-const btnCobaLagi    = document.getElementById('btn-coba-lagi');
-const errorDetail    = document.getElementById('error-detail');
-const dataBar        = document.getElementById('data-bar');
-const dataStatus     = document.getElementById('data-status');
-const btnRefresh     = document.getElementById('btn-refresh');
-const chips        = document.querySelectorAll('.chip');
 
-const navBeranda  = document.getElementById('nav-beranda');
 const navKategori = document.getElementById('nav-kategori');
 const navPost     = document.getElementById('nav-post');
 const navDaftar   = document.getElementById('nav-daftar');
@@ -53,60 +54,31 @@ const formDaftar   = document.getElementById('form-daftar');
 const formLogin    = document.getElementById('form-login');
 const formPost     = document.getElementById('form-post');
 
-// ===== AMBIL DATA BARANG DARI API (Fetch API + async/await) =====
-// Task 01: kirim request ke API lalu baca response sebagai JSON
-async function ambilData() {
-  try {
-    const response = await fetch(API_URL);
-    if (!response.ok) throw new Error('Server merespons status ' + response.status);
-    return { data: await response.json(), sumber: API_URL };
-  } catch (error) {
-    // Halaman dibuka dobel klik (file://) -> browser memblokir fetch.
-    // Pakai data cadangan yang tertanam di index.html supaya tetap bisa dilihat.
-    if (window.location.protocol === 'file:') {
-      const cadangan = JSON.parse(document.getElementById('barang-data').textContent);
-      return { data: cadangan, sumber: 'data cadangan (halaman dibuka langsung)' };
-    }
-    throw error;
-  }
+// ===== KOTAK EMOJI PENGGANTI GAMBAR =====
+function buatPlaceholder(kategori) {
+  const kosong = document.createElement('div');
+  kosong.className = 'img-placeholder';
+  kosong.textContent = emojiKategori[kategori] || '📦';
+  return kosong;
 }
 
-// Task 03: tiga kondisi - LOADING, SUCCESS, ERROR
-async function muatBarang() {
-  // LOADING
-  loadingMessage.hidden = false;
-  errorMessage.hidden = true;
-  dataBar.hidden = true;
-  productList.hidden = true;
-  emptyMessage.hidden = true;
-
-  try {
-    // Task 02: data hasil fetch disimpan lalu ditampilkan ke DOM lewat render()
-    const hasil = await ambilData();
-    dataAPI = hasil.data;
-
-    // SUCCESS
-    productList.hidden = false;
-    dataBar.hidden = false;
-    dataStatus.textContent = `● Data berhasil dimuat (${dataAPI.length} barang dari ${hasil.sumber})`;
-    render();
-  } catch (error) {
-    // ERROR
-    console.error('Gagal mengambil data:', error);
-    errorDetail.textContent = 'Pastikan file barang.json ada dan halaman dijalankan lewat server (misal Live Server), lalu coba lagi.';
-    errorMessage.hidden = false;
-  } finally {
-    loadingMessage.hidden = true;
-  }
+// Kalau file foto tidak ditemukan, ganti dengan emoji supaya kartu tetap rapi
+function pasangFallbackGambar(induk) {
+  induk.querySelectorAll('.product-card img').forEach((img) => {
+    const ganti = () => img.replaceWith(buatPlaceholder(img.closest('.product-card').dataset.kategori));
+    if (img.complete && img.naturalWidth === 0) ganti();
+    else img.addEventListener('error', ganti, { once: true });
+  });
 }
 
-btnCobaLagi.addEventListener('click', muatBarang);
-btnRefresh.addEventListener('click', muatBarang);
-
+// ===== KARTU UNTUK BARANG YANG DIPOSTING USER =====
+// Strukturnya sama persis dengan kartu buatan PHP (renderKartu di functions.php)
 function buatKartu(item) {
   const card = document.createElement('article');
-  card.className = 'product-card';
+  card.className = 'product-card' + (item.status === 'terjual' ? ' product-card--terjual' : '');
+  card.id = 'barang-' + item.id;
   card.dataset.id = item.id;
+  card.dataset.kategori = item.kategori;
 
   if (item.foto) {
     const img = document.createElement('img');
@@ -115,19 +87,14 @@ function buatKartu(item) {
     img.loading = 'lazy';
     card.appendChild(img);
   } else {
-    const kosong = document.createElement('div');
-    kosong.className = 'img-placeholder';
-    kosong.textContent = emojiKategori[item.kategori];
-    card.appendChild(kosong);
+    card.appendChild(buatPlaceholder(item.kategori));
   }
 
   const wish = document.createElement('button');
   wish.type = 'button';
   wish.className = 'btn-wish';
-  const difavoritkan = wishlist.includes(item.id);
-  wish.textContent = difavoritkan ? '♥' : '♡';
-  wish.classList.toggle('active', difavoritkan);
-  wish.setAttribute('aria-label', difavoritkan ? 'Hapus dari favorit' : 'Tambah ke favorit');
+  wish.textContent = '♡';
+  wish.setAttribute('aria-label', 'Tambah ke favorit');
   card.appendChild(wish);
 
   const judul = document.createElement('h2');
@@ -150,53 +117,49 @@ function buatKartu(item) {
   return card;
 }
 
-function render() {
-  productList.querySelectorAll('.product-card').forEach((c) => c.remove());
+// Aturan filter yang sama dengan filterBarang() di PHP
+function cocokFilter(item) {
+  const teks = `${item.nama} ${item.deskripsi} ${namaKategori[item.kategori]}`.toLowerCase();
+  const cocokKata = teks.includes(kataKunci);
+  const cocokKategori = kategoriAktif === 'semua' || kategoriAktif === 'favorit' || item.kategori === kategoriAktif;
+  return cocokKata && cocokKategori;
+}
 
-  const hasil = semuaBarang().filter((item) => {
-    const teks = `${item.nama} ${item.deskripsi} ${namaKategori[item.kategori]}`.toLowerCase();
-    const cocokKata = teks.includes(kataKunci);
-    const cocokKategori =
-      kategoriAktif === 'semua' ? true :
-      kategoriAktif === 'favorit' ? wishlist.includes(item.id) :
-      item.kategori === kategoriAktif;
-    return cocokKata && cocokKategori;
+// ===== FAVORIT =====
+function setTombolWish(card) {
+  const btn = card.querySelector('.btn-wish');
+  const aktif = wishlist.includes(Number(card.dataset.id));
+  btn.textContent = aktif ? '♥' : '♡';
+  btn.classList.toggle('active', aktif);
+  btn.setAttribute('aria-label', aktif ? 'Hapus dari favorit' : 'Tambah ke favorit');
+}
+
+function sinkronkanFavorit() {
+  productList.querySelectorAll('.product-card').forEach((card) => {
+    setTombolWish(card);
+    // Di halaman ?kategori=favorit, tampilkan hanya yang ada di wishlist
+    if (kategoriAktif === 'favorit') card.hidden = !wishlist.includes(Number(card.dataset.id));
   });
+}
 
-  hasil.forEach((item) => productList.appendChild(buatKartu(item)));
-
-  hasilInfo.textContent = `Menampilkan ${hasil.length} barang`;
-  emptyMessage.hidden = hasil.length > 0;
+// ===== INFO JUMLAH & PESAN KOSONG =====
+function perbaruiInfo() {
+  const jumlah = productList.querySelectorAll('.product-card:not([hidden])').length;
+  hasilInfo.textContent = `Menampilkan ${jumlah} barang`;
+  emptyMessage.hidden = jumlah > 0 || adaGalat;
   emptyMessage.textContent = kategoriAktif === 'favorit' && !kataKunci
     ? 'Belum ada barang favorit. Klik ♡ pada barang untuk menyimpannya.'
     : 'Barang tidak ditemukan. Coba kata kunci atau kategori lain.';
 }
 
-function jalankanCari() {
-  kataKunci = searchInput.value.toLowerCase().trim();
-  render();
-}
-btnCari.addEventListener('click', jalankanCari);
-searchInput.addEventListener('input', jalankanCari);   // hasil langsung berubah saat mengetik
-
-chips.forEach((chip) => {
-  chip.addEventListener('click', () => {
-    kategoriAktif = chip.dataset.kategori;
-    chips.forEach((c) => c.classList.toggle('active', c === chip));
-    render();
-  });
-});
-
-navBeranda.addEventListener('click', (e) => {
-  e.preventDefault();
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-});
-
+// ===== NAVIGASI =====
 navKategori.addEventListener('click', (e) => {
   e.preventDefault();
   document.getElementById('kategori').scrollIntoView({ behavior: 'smooth', block: 'center' });
 });
 
+// ===== KLIK DI DAFTAR BARANG (Detail & Favorit) =====
+// Satu listener di induk, jadi kartu buatan PHP maupun buatan JS sama-sama berfungsi
 productList.addEventListener('click', (e) => {
   const card = e.target.closest('.product-card');
   if (!card) return;
@@ -205,7 +168,9 @@ productList.addEventListener('click', (e) => {
   if (e.target.closest('.btn-wish')) {
     wishlist = wishlist.includes(id) ? wishlist.filter((x) => x !== id) : [...wishlist, id];
     simpanKe('mk_wishlist', wishlist);
-    render();
+    setTombolWish(card);
+    if (kategoriAktif === 'favorit') card.hidden = !wishlist.includes(id);
+    perbaruiInfo();
     return;
   }
 
@@ -215,18 +180,18 @@ productList.addEventListener('click', (e) => {
 });
 
 function bukaDetail(item) {
+  if (!item) return;
+
   const gambarBox = document.getElementById('detail-gambar');
   gambarBox.replaceChildren();
   if (item.foto) {
     const img = document.createElement('img');
     img.src = item.foto;
     img.alt = item.nama;
+    img.addEventListener('error', () => img.replaceWith(buatPlaceholder(item.kategori)), { once: true });
     gambarBox.appendChild(img);
   } else {
-    const kosong = document.createElement('div');
-    kosong.className = 'img-placeholder';
-    kosong.textContent = emojiKategori[item.kategori];
-    gambarBox.appendChild(kosong);
+    gambarBox.appendChild(buatPlaceholder(item.kategori));
   }
 
   document.getElementById('detail-nama').textContent = item.nama;
@@ -241,7 +206,7 @@ function bukaDetail(item) {
   statusEl.textContent = namaStatus[item.status];
   statusEl.className = 'status status--' + item.status;
 
-  const pesan = `Halo, saya tertarik dengan "${item.nama}" di Marketplace Kampus. Apakah masih tersedia?`;
+  const pesan = `Halo, saya tertarik dengan "${item.nama}" di Preloved.U. Apakah masih tersedia?`;
   document.getElementById('detail-wa').href = `https://wa.me/${item.wa}?text=${encodeURIComponent(pesan)}`;
 
   dialogDetail.showModal();
@@ -369,17 +334,25 @@ function simpanBarang(fotoData) {
   postingan.push(item);
   simpanKe('mk_posts', postingan);
 
-  kategoriAktif = 'semua';
-  kataKunci = '';
-  searchInput.value = '';
-  chips.forEach((c) => c.classList.toggle('active', c.dataset.kategori === 'semua'));
-
   formPost.reset();
   dialogPost.close();
-  render();
-  productList.querySelector(`[data-id="${item.id}"]`)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+  // Kalau sedang memakai filter (?q= atau ?kategori=), kembali ke halaman penuh
+  // supaya barang baru pasti terlihat. Tanpa filter, cukup ditambahkan ke daftar.
+  if (window.location.search !== '') {
+    window.location.href = 'index.php#barang-' + item.id;
+    return;
+  }
+
+  const kartu = buatKartu(item);
+  productList.appendChild(kartu);
+  pasangFallbackGambar(kartu);
+  setTombolWish(kartu);
+  perbaruiInfo();
+  kartu.scrollIntoView({ behavior: 'smooth', block: 'center' });
 }
 
+// ===== TUTUP DIALOG =====
 document.querySelectorAll('dialog').forEach((dlg) => {
   dlg.querySelectorAll('[data-close]').forEach((btn) =>
     btn.addEventListener('click', () => dlg.close())
@@ -391,4 +364,16 @@ document.querySelectorAll('dialog').forEach((dlg) => {
 
 // ===== MULAI =====
 updateTombolLogin();
-muatBarang();
+
+// 1) Tambahkan barang buatan user (dari localStorage) setelah kartu buatan PHP
+postingan.filter(cocokFilter).forEach((item) => productList.appendChild(buatKartu(item)));
+
+// 2) Rapikan: foto rusak, tombol favorit, mode favorit, dan jumlah barang
+pasangFallbackGambar(productList);
+sinkronkanFavorit();
+perbaruiInfo();
+
+// 3) Kalau datang dari posting barang, geser ke kartu barunya
+if (window.location.hash.startsWith('#barang-')) {
+  document.getElementById(window.location.hash.slice(1))?.scrollIntoView({ block: 'center' });
+}

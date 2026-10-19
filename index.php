@@ -1,23 +1,51 @@
+<?php
+// ============================================================
+// BAGIAN PHP: dijalankan di SERVER sebelum HTML dikirim ke browser
+// ============================================================
+require_once __DIR__ . '/functions.php';
+
+// ----- VARIABLE -----
+$namaSitus = 'Preloved.U';
+$tahun     = date('Y');
+
+// ----- INPUT dari URL (?q=...&kategori=...) -----
+$q             = ambilGet('q');
+$kategoriAktif = kategoriValid(ambilGet('kategori', 'semua'));
+$modeFavorit   = ($kategoriAktif === 'favorit');
+
+// ----- DATA: baca barang.json menjadi array -----
+$barang = bacaBarang();
+$galat  = '';
+
+if ($barang === null) {            // CONDITIONAL: data gagal dibaca
+    $galat  = 'File barang.json tidak ditemukan atau isinya rusak.';
+    $barang = [];
+}
+
+// ----- PROSES: saring data sesuai pencarian dan kategori -----
+$hasil  = filterBarang($barang, $q, $kategoriAktif);
+$jumlah = count($hasil);
+?>
 <!DOCTYPE html>
 <html lang="id">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Preloved.U</title>
+  <title><?= e($namaSitus) ?></title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
-<body id="top">
+<body id="top" data-kategori="<?= e($kategoriAktif) ?>" data-q="<?= e($q) ?>" data-galat="<?= $galat !== '' ? '1' : '0' ?>">
 
   <header>
     <div class="logo">
       <span class="logo-icon">🛍️</span>
-      <span>Preloved.U</span>
+      <span><?= e($namaSitus) ?></span>
     </div>
     <nav>
       <ul>
-        <li><a href="#top" id="nav-beranda">Beranda</a></li>
+        <li><a href="index.php" id="nav-beranda">Beranda</a></li>
         <li><a href="#kategori" id="nav-kategori">Kategori</a></li>
         <li><a href="#" id="nav-post">Post Barang</a></li>
         <li id="li-daftar"><a href="#" id="nav-daftar">Daftar</a></li>
@@ -28,48 +56,49 @@
 
   <main>
 
-    <section class="search-filter">
+    <!-- Pencarian: dikirim ke server lewat URL (?q=...) -->
+    <form class="search-filter" method="get" action="index.php" role="search">
       <label for="search" class="sr-only">Cari barang</label>
-      <input type="text" id="search" name="search" placeholder="Cari barang, misal: buku, kipas, meja...">
-      <button type="button" id="btn-cari">Cari</button>
-    </section>
+      <input type="text" id="search" name="q" value="<?= e($q) ?>" placeholder="Cari barang, misal: buku, kipas, meja...">
+      <?php if ($kategoriAktif !== 'semua'): ?>
+        <input type="hidden" name="kategori" value="<?= e($kategoriAktif) ?>">
+      <?php endif; ?>
+      <button type="submit" id="btn-cari">Cari</button>
+    </form>
 
+    <!-- Kategori: LOOP dari array KATEGORI -->
     <section class="chips" id="kategori" aria-label="Filter kategori">
-      <button type="button" class="chip active" data-kategori="semua">Semua</button>
-      <button type="button" class="chip" data-kategori="buku">📚 Buku</button>
-      <button type="button" class="chip" data-kategori="elektronik">🔌 Elektronik</button>
-      <button type="button" class="chip" data-kategori="perabot">🪑 Perabot Kos</button>
-      <button type="button" class="chip" data-kategori="favorit">♥ Favorit</button>
+      <?php foreach (KATEGORI as $kode => $info): ?>
+        <a class="chip<?= $kode === $kategoriAktif ? ' active' : '' ?>"
+           href="<?= e(urlFilter($kode, $q)) ?>"<?= $kode === $kategoriAktif ? ' aria-current="page"' : '' ?>>
+          <?= $info['emoji'] !== '' ? $info['emoji'] . ' ' : '' ?><?= e($info['label']) ?>
+        </a>
+      <?php endforeach; ?>
     </section>
 
-    <!-- Status data: muncul setelah fetch berhasil + tombol muat ulang -->
-    <div class="data-bar" id="data-bar" hidden>
-      <span class="data-status" id="data-status"></span>
-      <button type="button" class="btn-refresh" id="btn-refresh">↻ Muat Ulang</button>
-    </div>
+    <!-- Pesan error dari server (kalau barang.json bermasalah) -->
+    <?php if ($galat !== ''): ?>
+      <div class="error-message" role="alert">
+        <p class="error-title">Gagal memuat data barang.</p>
+        <p class="error-detail"><?= e($galat) ?></p>
+      </div>
+    <?php endif; ?>
 
-    <!-- LOADING: tampil saat fetch masih berjalan -->
-    <p id="loading-message" class="loading-message" role="status">
-      <span class="spinner" aria-hidden="true"></span> Mengambil data barang...
-    </p>
-
-    <!-- ERROR: tampil kalau fetch gagal -->
-    <div id="error-message" class="error-message" role="alert" hidden>
-      <p class="error-title">Gagal memuat data barang.</p>
-      <p class="error-detail" id="error-detail"></p>
-      <button type="button" id="btn-coba-lagi" class="btn btn-primary">Coba Lagi</button>
-    </div>
-
-    <section class="product-list" id="product-list" hidden>
+    <!-- Daftar barang: dicetak oleh PHP lewat LOOP, bukan ditulis satu per satu -->
+    <section class="product-list" id="product-list">
       <h1>Barang Tersedia</h1>
-      <p id="hasil-info" class="detail-meta"></p>
+      <p id="hasil-info" class="detail-meta"><?= $modeFavorit ? '' : 'Menampilkan ' . $jumlah . ' barang' ?></p>
+
+      <?php foreach ($hasil as $item): ?>
+        <?php renderKartu($item, $modeFavorit); ?>
+      <?php endforeach; ?>
     </section>
 
-    <p id="empty-message" class="empty-message" hidden>Barang tidak ditemukan. Coba kata kunci atau kategori lain.</p>
+    <p id="empty-message" class="empty-message"<?= ($jumlah > 0 || $galat !== '') ? ' hidden' : '' ?>><?= e(pesanKosong($kategoriAktif, $q)) ?></p>
   </main>
 
   <footer>
-    <p>&copy; 2026 Preloved.U</p>
+    <p>&copy; <?= $tahun ?> <?= e($namaSitus) ?></p>
   </footer>
 
   <!-- Detail barang -->
@@ -175,15 +204,8 @@
     </form>
   </dialog>
 
-  <script type="application/json" id="barang-data">
-    [
-      { "id": 1, "nama": "Buku Pemrograman Web", "harga": 50000, "kategori": "buku", "status": "tersedia", "wa": "6281234438020", "merk": "Penerbit lokal", "ukuran": "A5, ±250 halaman", "kondisi": "Bagus", "deskripsi": "Buku bekas kondisi baik, tanpa coretan.", "foto": "img/buku 1.jpg" },
-      { "id": 2, "nama": "Kipas Angin Kecil", "harga": 75000, "kategori": "elektronik", "status": "nego", "wa": "6281234438020", "merk": "Miyako", "ukuran": "20 cm", "kondisi": "Bagus", "deskripsi": "Kipas angin mini, masih berfungsi normal.", "foto": "img/PASFOT.jpeg" },
-      { "id": 3, "nama": "Mouse Wireless", "harga": 35000, "kategori": "elektronik", "status": "tersedia", "wa": "6281234438020", "merk": "Logitech", "ukuran": "Standar (±10 cm)", "kondisi": "Seperti baru", "deskripsi": "Mouse wireless, baterai baru diganti.", "foto": "img/mouse.jpg" },
-      { "id": 4, "nama": "Rak Buku Kayu", "harga": 120000, "kategori": "perabot", "status": "tersedia", "wa": "6281234438020", "merk": "Tanpa merk", "ukuran": "80 x 30 x 120 cm", "kondisi": "Bagus", "deskripsi": "Rak 4 tingkat, cocok untuk kamar kos.", "foto": "img/rakbuku.jpg" },
-      { "id": 5, "nama": "Meja Belajar Lipat", "harga": 90000, "kategori": "perabot", "status": "tersedia", "wa": "6281234438020", "merk": "Tanpa merk", "ukuran": "60 x 40 cm", "kondisi": "Layak pakai", "deskripsi": "Meja lipat ringan, mudah dibawa pindahan.", "foto": "img/Mejalipat.jpg" }
-    ]
-  </script>
+  <!-- Data barang dari PHP untuk JavaScript (dipakai popup detail dan favorit) -->
+  <script type="application/json" id="barang-data"><?= json_encode($barang, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_AMP) ?></script>
   <script src="script.js"></script>
 </body>
 </html>
