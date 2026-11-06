@@ -25,40 +25,46 @@ Marketplace khusus mahasiswa untuk memposting, mencari, dan menghubungi penjual 
 - Hubungi penjual lewat WhatsApp
 
 
-## Sprint 04 (Server-Side dengan PHP)
- 
-- Halaman utama dibuat oleh PHP (`index.php`), bukan ditulis satu per satu di HTML
-- Data barang dibaca server dari `barang.json` menjadi array PHP
-- Pencarian dan kategori diproses di server lewat URL (`?q=...&kategori=...`)
-- Loop `foreach` untuk mencetak kartu barang dan chip kategori
-- Conditional untuk status barang, foto/placeholder, dan pesan kosong
-- Function: `formatRupiah()`, `filterBarang()`, `renderKartu()`, `bacaBarang()`, dll (`functions.php`)
-- Output HTML di-escape dengan `htmlspecialchars` untuk mencegah XSS
-- Pesan error dari server kalau `barang.json` tidak ada atau rusak
+## Sprint 06 (Week 7: Dari OOP menjadi MVC dengan PHP)
 
-## Sprint 05 (Pertemuan 6: Object-Oriented Programming dengan PHP)
+Implementasi konsep **Model–View–Controller (MVC)** dalam pengembangan aplikasi web menggunakan PHP. Sprint ini berfokus pada pemisahan tanggung jawab antara pengelolaan data, tampilan, dan alur proses aplikasi agar kode lebih terstruktur, mudah dikelola, dan dikembangkan.
 
-Implementasi konsep OOP (Pemrograman Berorientasi Objek) pada PHP untuk pengelolaan data dan konten dinamis:
+**### 🧩 Task 01: Design the MVC Structure**
+- Memahami konsep arsitektur Model–View–Controller (MVC).
+- Memisahkan struktur aplikasi menjadi tiga komponen utama: Model, View, dan Controller.
+- Menentukan tanggung jawab masing-masing komponen.
+- Membuat struktur folder dan file untuk Model, View, dan Controller.
 
-### 🧩 Task 01: Create a Class (CLASS → OBJECT)
-- Membuat class `Barang` (`Barang.php`) yang merepresentasikan entitas data barang di marketplace Preloved.U.
-- Menentukan property data: `$id`, `$nama`, `$harga`, `$kategori`, `$status`, `$wa`, `$merk`, `$ukuran`, `$kondisi`, `$deskripsi`, `$foto`.
-- Instansiasi object dilakukan saat data dibaca dari `barang.json` melalui `bacaBarang()`, menghasilkan kumpulan object `Barang`.
-- Data barang dapat diakses dengan aman melalui getter methods.
+**### ⚙️ Task 02: Build the Controller**
+- Membuat Controller untuk menangani request dari pengguna.
+- Mengatur alur proses aplikasi melalui Controller.
+- Membuat method untuk menjalankan proses aplikasi.
+- Menghubungkan Controller dengan Model.
+- Mengirimkan data dari Controller menuju View.
 
-### ⚙️ Task 02: Add Properties & Methods (OBJECT = DATA + BEHAVIOR)
-- Menambahkan method/behavior pada class `Barang`:
-  - Getter: `getId()`, `getNama()`, `getHarga()`, `getKategori()`, `getStatus()`, `getWa()`, `getMerk()`, `getUkuran()`, `getKondisi()`, `getDeskripsi()`, `getFoto()`.
-  - Format & Tampilan: `getHargaFormat()` (format Rupiah), `getLabelStatus()`, `getLabelKategori()`, `getEmojiKategori()`, `hasFoto()`, `isTerjual()`.
-  - Integrasi Komunikasi: `getLinkWa()` (menghasilkan tautan langsung WhatsApp dengan template pesan).
-  - Enkapsulasi Logika: method `cocok($q, $kategori)` untuk memproses pencarian kata kunci dan filter kategori langsung di level object.
-  - Serialisasi: `toArray()` dan `jsonSerialize()` (`JsonSerializable`) agar sinkronisasi data ke `script.js` tetap berjalan mulus.
+**### 🔗 Task 03: Connect Model, Controller & View**
+- Menghubungkan Model, Controller, dan View agar dapat bekerja secara terintegrasi.
+- Model bertanggung jawab mengelola data aplikasi.
+- Controller menangani request dan memproses data melalui Model.
+- View menerima data dari Controller dan menampilkannya sebagai halaman HTML.
+- Memastikan data dapat ditampilkan melalui alur MVC tanpa error.
 
-### 🎨 Task 03: Generate Dynamic Content with Object (OBJECT → PHP → HTML)
-- Halaman `index.php` memproses data langsung dari object `Barang`.
-- Menghasilkan kartu produk secara dinamis menggunakan method `$item->renderKartu($modeFavorit)`.
-- Semua data tampilan (judul, harga, status, badge, gambar/placeholder, atribut data) bersumber dari method object.
-- Tampilan tetap konsisten dan presisi sesuai desain, dan interaksi frontend (dialog detail, favorit, tambah postingan) tetap berfungsi penuh.
+**### 🎨 Task 04: Demonstrate MVC Flow**
+- Menjalankan aplikasi dengan struktur MVC.
+- Memahami alur komunikasi User → Request → Controller → Model → View.
+- Menampilkan data yang berasal dari Model melalui View.
+- Menjelaskan fungsi dan tanggung jawab masing-masing komponen MVC.
+
+**### ✅ Task 05: Review & Completion Checklist**
+- Memastikan konsep MVC diterapkan dengan benar.
+- Memastikan Model memiliki tanggung jawab yang jelas.
+- Memastikan View berfokus pada tampilan.
+- Memastikan Controller menangani alur aplikasi.
+- Memastikan data tidak tercampur dengan tampilan.
+- Menguji aplikasi agar berjalan tanpa error.
+- Melakukan commit dan push hasil pekerjaan ke GitHub.
+
+**Output:** Aplikasi web berbasis MVC dengan pemisahan Model, View, dan Controller, alur request yang terstruktur, serta hasil implementasi dan dokumentasi melalui GitHub.
 
 ## 🚧 Belum Ada / Rencana
 
