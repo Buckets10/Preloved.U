@@ -128,6 +128,7 @@ Buka `http://localhost:8000` di browser.
 | 4 | Sprint 03: Fetch API, loading & error state | Selesai |
 | 5 | Sprint 04: server-side dengan PHP | Selesai |
 | 6 | Sprint 05: Object-Oriented Programming (OOP) dengan PHP | Selesai |
+| 7 | Sprint 06: Dari OOP menjadi MVC | Selesai |
 
 ## 📄 Mata Kuliah
 

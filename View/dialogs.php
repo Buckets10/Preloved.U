@@ -1,0 +1,102 @@
+<!-- Detail barang -->
+<dialog id="dialog-detail">
+  <div class="dialog-body">
+    <div id="detail-gambar"></div>
+    <h2 id="detail-nama"></h2>
+    <p class="price" id="detail-harga"></p>
+    <p><span class="status" id="detail-status"></span></p>
+    <dl class="spec-list">
+      <div><dt>Merk</dt><dd id="detail-merk"></dd></div>
+      <div><dt>Ukuran</dt><dd id="detail-ukuran"></dd></div>
+      <div><dt>Kondisi</dt><dd id="detail-kondisi"></dd></div>
+    </dl>
+    <p class="detail-meta" id="detail-kategori"></p>
+    <p id="detail-deskripsi"></p>
+    <div class="dialog-actions">
+      <a class="btn btn-primary" id="detail-wa" target="_blank" rel="noopener">Hubungi Penjual via WA</a>
+      <button type="button" class="btn btn-ghost" data-close>Tutup</button>
+    </div>
+  </div>
+</dialog>
+
+<!-- Daftar akun -->
+<dialog id="dialog-daftar">
+  <form id="form-daftar" class="dialog-body">
+    <h2>Buat Akun</h2>
+    <p class="detail-meta">Daftar dulu sebelum bisa login.</p>
+    <label for="daftar-nama">Nama</label>
+    <input type="text" id="daftar-nama" required>
+    <label for="daftar-email">Email kampus</label>
+    <input type="email" id="daftar-email" required>
+    <label for="daftar-password">Password (min. 6 karakter)</label>
+    <input type="password" id="daftar-password" required>
+    <p class="form-error" id="daftar-error" role="alert"></p>
+    <div class="dialog-actions">
+      <button type="submit" class="btn btn-primary">Daftar</button>
+      <button type="button" class="btn btn-ghost" data-close>Batal</button>
+    </div>
+    <p class="detail-meta">Sudah punya akun? <button type="button" class="btn-link" id="ke-login">Login</button></p>
+  </form>
+</dialog>
+
+<!-- Login -->
+<dialog id="dialog-login">
+  <form id="form-login" class="dialog-body">
+    <h2>Login</h2>
+    <p class="detail-meta" id="login-info">Masuk untuk memposting barang.</p>
+    <label for="login-email">Email kampus</label>
+    <input type="email" id="login-email" required>
+    <label for="login-password">Password</label>
+    <input type="password" id="login-password" required>
+    <p class="form-error" id="login-error" role="alert"></p>
+    <div class="dialog-actions">
+      <button type="submit" class="btn btn-primary">Masuk</button>
+      <button type="button" class="btn btn-ghost" data-close>Batal</button>
+    </div>
+    <p class="detail-meta">Belum punya akun? <button type="button" class="btn-link" id="ke-daftar">Daftar di sini</button></p>
+  </form>
+</dialog>
+
+<!-- Post barang -->
+<dialog id="dialog-post">
+  <form id="form-post" class="dialog-body">
+    <h2>Post Barang</h2>
+    <label for="post-nama">Nama barang</label>
+    <input type="text" id="post-nama" required>
+    <label for="post-merk">Merk</label>
+    <input type="text" id="post-merk" placeholder="Isi &quot;Tanpa merk&quot; jika tidak ada" required>
+    <label for="post-ukuran">Ukuran</label>
+    <input type="text" id="post-ukuran" placeholder="Contoh: 30 cm, A5, 120 x 40 cm" required>
+    <label for="post-kondisi">Kondisi barang</label>
+    <select id="post-kondisi" required>
+      <option>Seperti baru</option>
+      <option selected>Bagus</option>
+      <option>Layak pakai</option>
+      <option>Ada minus</option>
+    </select>
+    <label for="post-harga">Harga (Rp)</label>
+    <input type="number" id="post-harga" min="0" required>
+    <label for="post-kategori">Kategori</label>
+    <select id="post-kategori" required>
+      <option value="buku">Buku</option>
+      <option value="elektronik">Elektronik</option>
+      <option value="perabot">Perabot Kos</option>
+    </select>
+    <label for="post-status">Status</label>
+    <select id="post-status" required>
+      <option value="tersedia">Tersedia</option>
+      <option value="nego">Nego</option>
+      <option value="terjual">Terjual</option>
+    </select>
+    <label for="post-wa">Nomor WA (format 628xxx)</label>
+    <input type="tel" id="post-wa" pattern="62[0-9]{8,13}" placeholder="628123456789" required>
+    <label for="post-deskripsi">Deskripsi</label>
+    <textarea id="post-deskripsi" rows="3" required></textarea>
+    <label for="post-foto">Foto (opsional)</label>
+    <input type="file" id="post-foto" accept="image/*">
+    <div class="dialog-actions">
+      <button type="submit" class="btn btn-primary">Posting</button>
+      <button type="button" class="btn btn-ghost" data-close>Batal</button>
+    </div>
+  </form>
+</dialog>
