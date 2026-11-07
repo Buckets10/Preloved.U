@@ -15,7 +15,7 @@ Mahasiswa (sebagai penjual maupun pembeli) di lingkungan kampus.
 Marketplace khusus mahasiswa untuk memposting, mencari, dan menghubungi penjual barang bekas, lengkap dengan kategori, status, dan detail kondisi barang.
 
 ## ✅ Fitur yang Sudah Ada
- 
+
 - Daftar akun dan login (wajib punya akun sebelum memposting barang)
 - Post barang: nama, merk, ukuran, kondisi, harga, kategori, status, nomor WA, deskripsi, foto
 - Status barang: Tersedia / Nego / Terjual
@@ -24,38 +24,66 @@ Marketplace khusus mahasiswa untuk memposting, mencari, dan menghubungi penjual 
 - Wishlist (simpan barang favorit)
 - Hubungi penjual lewat WhatsApp
 
-
 ## Sprint 06 (Week 7: Dari OOP menjadi MVC dengan PHP)
 
 Implementasi konsep **Model–View–Controller (MVC)** dalam pengembangan aplikasi web menggunakan PHP. Sprint ini berfokus pada pemisahan tanggung jawab antara pengelolaan data, tampilan, dan alur proses aplikasi agar kode lebih terstruktur, mudah dikelola, dan dikembangkan.
 
-**### 🧩 Task 01: Design the MVC Structure**
+### 🧩 Task 01: Design the MVC Structure
+
 - Memahami konsep arsitektur Model–View–Controller (MVC).
 - Memisahkan struktur aplikasi menjadi tiga komponen utama: Model, View, dan Controller.
 - Menentukan tanggung jawab masing-masing komponen.
 - Membuat struktur folder dan file untuk Model, View, dan Controller.
 
-**### ⚙️ Task 02: Build the Controller**
+**Implementasi di Preloved.U:**
+
+| Komponen | File | Tanggung jawab |
+|---|---|---|
+| Model | `Model/Barang.php` | Data barang (property private, constructor, getter), aturan bisnis (`isTerjual()`, `hasFoto()`, `getLinkWa()`, `cocok()`), dan data access (`Barang::semua()` membaca `barang.json`, `Barang::saring()` memfilter data) |
+| View | `View/barang-page.php`, `View/kartu-barang.php`, `View/dialogs.php` | Hanya menampilkan data sebagai HTML: halaman utama, kartu barang, dan dialog |
+| Controller | `Controller/BarangController.php` | Menerima request (`?q=` dan `?kategori=`), meminta data ke Model, lalu mengirimkannya ke View |
+
+### ⚙️ Task 02: Build the Controller
+
 - Membuat Controller untuk menangani request dari pengguna.
 - Mengatur alur proses aplikasi melalui Controller.
 - Membuat method untuk menjalankan proses aplikasi.
 - Menghubungkan Controller dengan Model.
 - Mengirimkan data dari Controller menuju View.
 
-**### 🔗 Task 03: Connect Model, Controller & View**
+**Implementasi:** `BarangController::index()` membaca input URL, memanggil `Barang::semua()` dan `Barang::saring()`, lalu mengirim hasilnya ke View lewat method `render()`. Jika `barang.json` tidak ditemukan atau rusak, Controller menyiapkan pesan error untuk View.
+
+### 🔗 Task 03: Connect Model, Controller & View
+
 - Menghubungkan Model, Controller, dan View agar dapat bekerja secara terintegrasi.
 - Model bertanggung jawab mengelola data aplikasi.
 - Controller menangani request dan memproses data melalui Model.
 - View menerima data dari Controller dan menampilkannya sebagai halaman HTML.
 - Memastikan data dapat ditampilkan melalui alur MVC tanpa error.
 
-**### 🎨 Task 04: Demonstrate MVC Flow**
+**Implementasi:** `index.php` hanya memanggil `BarangController`. Method `renderKartu()` yang sebelumnya berada di class `Barang` (Week 6) dipindahkan ke `View/kartu-barang.php`, sehingga Model tidak lagi berisi HTML.
+
+### 🎨 Task 04: Demonstrate MVC Flow
+
 - Menjalankan aplikasi dengan struktur MVC.
 - Memahami alur komunikasi User → Request → Controller → Model → View.
 - Menampilkan data yang berasal dari Model melalui View.
 - Menjelaskan fungsi dan tanggung jawab masing-masing komponen MVC.
 
-**### ✅ Task 05: Review & Completion Checklist**
+**Alur request:**
+
+```
+User → index.php → BarangController::index()
+                        │
+                        ├─ ambil input URL (q, kategori)
+                        ├─ Barang::semua()  → barang.json → object Barang
+                        ├─ Barang::saring() → filter kata kunci + kategori
+                        ▼
+                   View/barang-page.php → kartu-barang.php → HTML → User
+```
+
+### ✅ Task 05: Review & Completion Checklist
+
 - Memastikan konsep MVC diterapkan dengan benar.
 - Memastikan Model memiliki tanggung jawab yang jelas.
 - Memastikan View berfokus pada tampilan.
@@ -78,43 +106,57 @@ Implementasi konsep **Model–View–Controller (MVC)** dalam pengembangan aplik
 ## 🛠️ Tech Stack
 
 - **Frontend:** HTML (semantic), CSS (responsive), JavaScript (DOM & event handling)
-- **Backend:** PHP (OOP - Object Oriented Programming)
+- **Backend:** PHP (OOP – Object Oriented Programming, arsitektur MVC)
 - **Database:** JSON (rencana: MySQL)
 - **Version Control:** Git & GitHub
 
 ## ▶️ Cara Menjalankan
- 
+
 Halaman ini memakai PHP, jadi **harus dijalankan lewat server PHP**. Membuka `index.php` dengan dobel klik atau dengan ekstensi Live Server **tidak akan menjalankan PHP** (yang tampil kode mentah atau halaman kosong).
- 
+
 **Opsi 1 — XAMPP**
+
 1. Salin folder project ke `C:\xampp\htdocs\`
 2. Jalankan **Apache** dari XAMPP Control Panel
 3. Buka `http://localhost/NAMA_FOLDER/index.php`
+
 **Opsi 2 — Laragon**
+
 1. Salin folder project ke `C:\laragon\www\`
 2. Klik **Start All**, lalu buka `http://localhost/NAMA_FOLDER/`
+
 **Opsi 3 — PHP CLI (kalau PHP sudah terpasang)**
+
 Buka terminal di folder project, lalu jalankan:
+
 ```
 php -S localhost:8000
 ```
+
 Buka `http://localhost:8000` di browser.
- 
+
 > **Catatan:** Akun, barang yang diposting, dan favorit disimpan di `localStorage` browser masing-masing, jadi hanya berlaku di perangkat yang dipakai. Ini simulasi untuk tahap sebelum database.
 
 ## 📂 Struktur Folder
 
 ```
-├── index.php        # halaman utama (PHP + HTML, render dinamis dari object)
-├── functions.php    # variable, array, konstanta, dan helper PHP
-├── Barang.php       # class Barang (OOP: property, method, dynamic render)
-├── barang.json      # data barang (sumber data object)
-├── style.css        # tampilan dan responsive layout
-├── script.js        # interaksi (popup, favorit, akun, post barang)
-├── img/             # foto barang
+Preloved.U/
+├── index.php                  # pintu masuk: memanggil BarangController
+├── functions.php              # helper tampilan: e(), formatRupiah(), urlFilter(), pesanKosong()
+├── Model/
+│   └── Barang.php             # MODEL: class Barang (data, aturan bisnis, akses barang.json)
+├── View/
+│   ├── barang-page.php        # VIEW: halaman utama
+│   ├── kartu-barang.php       # VIEW: satu kartu barang
+│   └── dialogs.php            # VIEW: dialog detail, daftar, login, post barang
+├── Controller/
+│   └── BarangController.php   # CONTROLLER: request → Model → View
+├── barang.json                # data barang (sumber data object)
+├── style.css                  # tampilan dan responsive layout
+├── script.js                  # interaksi (popup, favorit, akun, post barang)
+├── img/                       # foto barang
 └── README.md
 ```
-
 
 ## 👥 Tim Pengembang
 
