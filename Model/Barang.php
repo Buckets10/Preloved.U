@@ -5,9 +5,7 @@
  * Tidak ada HTML di sini, dan tidak tahu apa-apa soal $_GET / tampilan.
  */
 
-class Barang implements JsonSerializable
-{
-    // ===== DATA PENDUKUNG (kode => label) =====
+class Barang implements JsonSerializable {
     public const FILE = __DIR__ . '/../barang.json';
 
     public const STATUS = [
@@ -24,7 +22,6 @@ class Barang implements JsonSerializable
         'favorit'    => ['label' => 'Favorit',     'emoji' => '♥'],
     ];
 
-    // ===== PROPERTIES =====
     private int $id;
     private string $nama;
     private float $harga;
@@ -37,8 +34,7 @@ class Barang implements JsonSerializable
     private string $deskripsi;
     private string $foto;
 
-    public function __construct(array $data = [])
-    {
+    public function __construct(array $data = []) {
         $this->id        = (int) ($data['id'] ?? 0);
         $this->nama      = (string) ($data['nama'] ?? '');
         $this->harga     = (float) ($data['harga'] ?? 0);
@@ -52,7 +48,6 @@ class Barang implements JsonSerializable
         $this->foto      = (string) ($data['foto'] ?? '');
     }
 
-    // ===== GETTERS =====
     public function getId(): int          { return $this->id; }
     public function getNama(): string     { return $this->nama; }
     public function getHarga(): float     { return $this->harga; }
@@ -65,42 +60,34 @@ class Barang implements JsonSerializable
     public function getDeskripsi(): string { return $this->deskripsi; }
     public function getFoto(): string     { return $this->foto; }
 
-    // ===== BEHAVIOR / ATURAN BISNIS =====
-    public function hasFoto(): bool
-    {
+    public function hasFoto(): bool {
         return trim($this->foto) !== '';
     }
 
-    public function isTerjual(): bool
-    {
+    public function isTerjual(): bool {
         return strtolower($this->status) === 'terjual';
     }
 
-    public function getLabelStatus(): string
-    {
+    public function getLabelStatus(): string {
         return self::STATUS[$this->status] ?? ucfirst($this->status);
     }
 
-    public function getLabelKategori(): string
-    {
+    public function getLabelKategori(): string {
         return self::KATEGORI[$this->kategori]['label'] ?? ucfirst($this->kategori);
     }
 
-    public function getEmojiKategori(): string
-    {
+    public function getEmojiKategori(): string {
         return self::KATEGORI[$this->kategori]['emoji'] ?? '📦';
     }
 
-    public function getLinkWa(string $customMessage = ''): string
-    {
+    public function getLinkWa(string $customMessage = ''): string {
         if ($customMessage === '') {
             $customMessage = "Halo, saya tertarik dengan \"{$this->nama}\" di Preloved.U. Apakah masih tersedia?";
         }
         return 'https://wa.me/' . $this->wa . '?text=' . rawurlencode($customMessage);
     }
 
-    public function cocok(string $q, string $kategori): bool
-    {
+    public function cocok(string $q, string $kategori): bool {
         $teks = $this->nama . ' ' . $this->deskripsi . ' ' . $this->getLabelKategori();
 
         $cocokKata     = ($q === '') || (stripos($teks, $q) !== false);
@@ -110,10 +97,7 @@ class Barang implements JsonSerializable
         return $cocokKata && $cocokKategori;
     }
 
-    // ===== DATA ACCESS =====
-    /** Baca barang.json -> array of Barang, atau null kalau file hilang / rusak. */
-    public static function semua(): ?array
-    {
+    public static function semua(): ?array {
         if (!is_readable(self::FILE)) {
             return null;
         }
@@ -133,9 +117,7 @@ class Barang implements JsonSerializable
         return $daftar;
     }
 
-    /** Saring daftar barang berdasarkan kata kunci + kategori. */
-    public static function saring(array $daftar, string $q, string $kategori): array
-    {
+    public static function saring(array $daftar, string $q, string $kategori): array {
         $hasil = [];
         foreach ($daftar as $item) {
             if ($item instanceof Barang && $item->cocok($q, $kategori)) {
@@ -145,8 +127,7 @@ class Barang implements JsonSerializable
         return $hasil;
     }
 
-    public function toArray(): array
-    {
+    public function toArray(): array {
         return [
             'id'        => $this->id,
             'nama'      => $this->nama,
@@ -162,8 +143,7 @@ class Barang implements JsonSerializable
         ];
     }
 
-    public function jsonSerialize(): array
-    {
+    public function jsonSerialize(): array {
         return $this->toArray();
     }
 }

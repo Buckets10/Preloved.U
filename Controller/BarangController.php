@@ -8,15 +8,11 @@
 require_once __DIR__ . '/../functions.php';
 require_once __DIR__ . '/../Model/Barang.php';
 
-class BarangController
-{
-    public function index(): void
-    {
-        // 1) REQUEST: ambil input dari URL (?q=...&kategori=...)
+class BarangController {
+    public function index(): void {
         $q             = $this->ambilGet('q');
         $kategoriAktif = $this->kategoriValid($this->ambilGet('kategori', 'semua'));
 
-        // 2) MODEL: minta data & saring
         $barang = Barang::semua();
         $galat  = '';
 
@@ -27,7 +23,6 @@ class BarangController
 
         $hasil = Barang::saring($barang, $q, $kategoriAktif);
 
-        // 3) VIEW: kirim data ke tampilan
         $this->render('barang-page', [
             'namaSitus'     => 'Preloved.U',
             'tahun'         => date('Y'),
@@ -41,21 +36,17 @@ class BarangController
         ]);
     }
 
-    private function render(string $view, array $data): void
-    {
+    private function render(string $view, array $data): void {
         extract($data);
         require __DIR__ . '/../View/' . $view . '.php';
     }
 
-    // $_GET bisa berisi array (?q[]=a). Hanya teks biasa yang diterima.
-    private function ambilGet(string $kunci, string $bawaan = ''): string
-    {
+    private function ambilGet(string $kunci, string $bawaan = ''): string {
         $nilai = $_GET[$kunci] ?? $bawaan;
         return is_string($nilai) ? trim($nilai) : $bawaan;
     }
 
-    private function kategoriValid(string $kode): string
-    {
+    private function kategoriValid(string $kode): string {
         return array_key_exists($kode, Barang::KATEGORI) ? $kode : 'semua';
     }
 }

@@ -1,9 +1,3 @@
-// ============================================================
-// script.js (Week 5)
-// Kartu barang utama sekarang dibuat oleh PHP (index.php).
-// JavaScript hanya mengurus: popup detail, favorit, akun, dan posting barang.
-// ============================================================
-
 const namaStatus    = { tersedia: 'Tersedia', nego: 'Nego', terjual: 'Terjual' };
 const namaKategori  = { buku: 'Buku', elektronik: 'Elektronik', perabot: 'Perabot Kos' };
 const emojiKategori = { buku: '📚', elektronik: '🔌', perabot: '🪑' };
@@ -18,16 +12,12 @@ function simpanKe(kunci, nilai) {
   catch { alert('Penyimpanan browser penuh, data tidak bisa disimpan permanen.'); }
 }
 
-// ===== DATA DARI PHP =====
-// PHP menaruh seluruh barang di <script id="barang-data"> (format JSON).
 const dataServer = JSON.parse(document.getElementById('barang-data').textContent);
 
-// Filter yang sedang aktif, juga ditentukan oleh PHP lewat atribut <body>
 const kategoriAktif = document.body.dataset.kategori || 'semua';
 const kataKunci     = (document.body.dataset.q || '').toLowerCase();
 const adaGalat      = document.body.dataset.galat === '1';
 
-// ===== DATA DARI BROWSER (localStorage) =====
 let postingan  = baca('mk_posts', []);      // barang yang diposting user
 let wishlist   = baca('mk_wishlist', []);   // id barang favorit
 let userLogin  = baca('mk_user', null);     // nama user yang login
@@ -35,7 +25,6 @@ let daftarAkun = baca('mk_accounts', []);   // akun yang sudah terdaftar
 
 const semuaBarang = () => [...dataServer, ...postingan];
 
-// ===== ELEMEN =====
 const productList  = document.getElementById('product-list');
 const hasilInfo    = document.getElementById('hasil-info');
 const emptyMessage = document.getElementById('empty-message');
@@ -54,7 +43,6 @@ const formDaftar   = document.getElementById('form-daftar');
 const formLogin    = document.getElementById('form-login');
 const formPost     = document.getElementById('form-post');
 
-// ===== KOTAK EMOJI PENGGANTI GAMBAR =====
 function buatPlaceholder(kategori) {
   const kosong = document.createElement('div');
   kosong.className = 'img-placeholder';
@@ -62,7 +50,6 @@ function buatPlaceholder(kategori) {
   return kosong;
 }
 
-// Kalau file foto tidak ditemukan, ganti dengan emoji supaya kartu tetap rapi
 function pasangFallbackGambar(induk) {
   induk.querySelectorAll('.product-card img').forEach((img) => {
     const ganti = () => img.replaceWith(buatPlaceholder(img.closest('.product-card').dataset.kategori));
@@ -71,8 +58,6 @@ function pasangFallbackGambar(induk) {
   });
 }
 
-// ===== KARTU UNTUK BARANG YANG DIPOSTING USER =====
-// Strukturnya sama persis dengan kartu buatan PHP (renderKartu di functions.php)
 function buatKartu(item) {
   const card = document.createElement('article');
   card.className = 'product-card' + (item.status === 'terjual' ? ' product-card--terjual' : '');
@@ -117,7 +102,6 @@ function buatKartu(item) {
   return card;
 }
 
-// Aturan filter yang sama dengan filterBarang() di PHP
 function cocokFilter(item) {
   const teks = `${item.nama} ${item.deskripsi} ${namaKategori[item.kategori]}`.toLowerCase();
   const cocokKata = teks.includes(kataKunci);
@@ -125,7 +109,6 @@ function cocokFilter(item) {
   return cocokKata && cocokKategori;
 }
 
-// ===== FAVORIT =====
 function setTombolWish(card) {
   const btn = card.querySelector('.btn-wish');
   const aktif = wishlist.includes(Number(card.dataset.id));
@@ -137,12 +120,10 @@ function setTombolWish(card) {
 function sinkronkanFavorit() {
   productList.querySelectorAll('.product-card').forEach((card) => {
     setTombolWish(card);
-    // Di halaman ?kategori=favorit, tampilkan hanya yang ada di wishlist
     if (kategoriAktif === 'favorit') card.hidden = !wishlist.includes(Number(card.dataset.id));
   });
 }
 
-// ===== INFO JUMLAH & PESAN KOSONG =====
 function perbaruiInfo() {
   const jumlah = productList.querySelectorAll('.product-card:not([hidden])').length;
   hasilInfo.textContent = `Menampilkan ${jumlah} barang`;
@@ -152,14 +133,11 @@ function perbaruiInfo() {
     : 'Barang tidak ditemukan. Coba kata kunci atau kategori lain.';
 }
 
-// ===== NAVIGASI =====
 navKategori.addEventListener('click', (e) => {
   e.preventDefault();
   document.getElementById('kategori').scrollIntoView({ behavior: 'smooth', block: 'center' });
 });
 
-// ===== KLIK DI DAFTAR BARANG (Detail & Favorit) =====
-// Satu listener di induk, jadi kartu buatan PHP maupun buatan JS sama-sama berfungsi
 productList.addEventListener('click', (e) => {
   const card = e.target.closest('.product-card');
   if (!card) return;
@@ -212,7 +190,6 @@ function bukaDetail(item) {
   dialogDetail.showModal();
 }
 
-// ===== AKUN: DAFTAR & LOGIN =====
 function updateTombolLogin() {
   navLogin.textContent = userLogin ? `Logout (${userLogin})` : 'Login';
   liDaftar.hidden = !!userLogin;   // tombol Daftar hilang kalau sudah login
@@ -249,7 +226,6 @@ navLogin.addEventListener('click', (e) => {
   }
 });
 
-// pindah antar dialog
 document.getElementById('ke-daftar').addEventListener('click', () => { dialogLogin.close(); bukaDaftar(); });
 document.getElementById('ke-login').addEventListener('click', () => { dialogDaftar.close(); bukaLogin('Masuk untuk memposting barang.'); });
 
@@ -288,7 +264,6 @@ formLogin.addEventListener('submit', (e) => {
   dialogLogin.close();
 });
 
-// ===== POST BARANG =====
 navPost.addEventListener('click', (e) => {
   e.preventDefault();
   if (!userLogin) {
@@ -305,7 +280,6 @@ formPost.addEventListener('submit', (e) => {
   if (foto) {
     const reader = new FileReader();
     reader.onload = () => {
-      // foto disimpan sebagai teks (dataURL); kalau terlalu besar, dilewati agar penyimpanan tidak penuh
       const terlaluBesar = reader.result.length > 700000;
       if (terlaluBesar) alert('Foto terlalu besar, barang diposting tanpa foto. Pakai foto di bawah ±500 KB.');
       simpanBarang(terlaluBesar ? null : reader.result);
@@ -337,8 +311,6 @@ function simpanBarang(fotoData) {
   formPost.reset();
   dialogPost.close();
 
-  // Kalau sedang memakai filter (?q= atau ?kategori=), kembali ke halaman penuh
-  // supaya barang baru pasti terlihat. Tanpa filter, cukup ditambahkan ke daftar.
   if (window.location.search !== '') {
     window.location.href = 'index.php#barang-' + item.id;
     return;
@@ -352,7 +324,6 @@ function simpanBarang(fotoData) {
   kartu.scrollIntoView({ behavior: 'smooth', block: 'center' });
 }
 
-// ===== TUTUP DIALOG =====
 document.querySelectorAll('dialog').forEach((dlg) => {
   dlg.querySelectorAll('[data-close]').forEach((btn) =>
     btn.addEventListener('click', () => dlg.close())
@@ -362,18 +333,14 @@ document.querySelectorAll('dialog').forEach((dlg) => {
   });
 });
 
-// ===== MULAI =====
 updateTombolLogin();
 
-// 1) Tambahkan barang buatan user (dari localStorage) setelah kartu buatan PHP
 postingan.filter(cocokFilter).forEach((item) => productList.appendChild(buatKartu(item)));
 
-// 2) Rapikan: foto rusak, tombol favorit, mode favorit, dan jumlah barang
 pasangFallbackGambar(productList);
 sinkronkanFavorit();
 perbaruiInfo();
 
-// 3) Kalau datang dari posting barang, geser ke kartu barunya
 if (window.location.hash.startsWith('#barang-')) {
   document.getElementById(window.location.hash.slice(1))?.scrollIntoView({ block: 'center' });
 }
