@@ -94,6 +94,75 @@ User → index.php → BarangController::index()
 
 **Output:** Aplikasi web berbasis MVC dengan pemisahan Model, View, dan Controller, alur request yang terstruktur, serta hasil implementasi dan dokumentasi melalui GitHub.
 
+## Sprint 07 (Pertemuan 10: CRUD di Controller, Request & Validation, RESTful API)
+
+Memindahkan proses CRUD ke `ProgramController`, menambahkan validasi, lalu membangun RESTful API untuk data **Program** (kolom `id`, `nama`, `deskripsi`).
+
+> **Catatan implementasi:** project ini PHP native (bukan Laravel), jadi alur dan sintaks yang diminta task (`Route`, `Program::create()`, `findOrFail()`, `$request->validate()`, `Route::apiResource()`) disediakan lewat lapisan kecil di folder `app/` dengan namespace dan nama class yang sama seperti di Laravel. Kode di controller bisa dibaca dan dipindah ke Laravel hampir tanpa perubahan.
+
+**Alur:** `Route → Controller (ProgramController) → Eloquent (Program) → Database → Response`
+
+### 🧩 Task 01: Move CRUD into Controller
+
+`app/Http/Controllers/ProgramController.php` berisi seluruh proses CRUD:
+
+| Method | Fungsi | Route web |
+|---|---|---|
+| `index()` | READ: daftar program | `GET /programs` |
+| `create()` | FORM: form tambah | `GET /programs/create` |
+| `store(Request $request)` | CREATE: simpan | `POST /programs` |
+| `edit($id)` | FORM EDIT | `GET /programs/{id}/edit` |
+| `update(Request $request, $id)` | UPDATE | `PUT /programs/{id}` |
+| `destroy($id)` | DELETE | `DELETE /programs/{id}` |
+
+Route didaftarkan di `routes/web.php` (`Route::resource`), Model di `app/Models/Program.php`, tampilan di `resources/views/programs/`.
+
+### ✅ Task 02: Add Request & Validation
+
+`store()` dan `update()` memvalidasi input sebelum disimpan:
+
+```php
+$request->validate([
+    'nama'      => 'required|max:100',
+    'deskripsi' => 'required',
+]);
+```
+
+| Kasus | Hasil |
+|---|---|
+| Input valid | `200` `{"message": "Berhasil", "data": {...}}` |
+| Input kosong | `422` `{"message": "The given data was invalid.", "errors": {"nama": ["Nama wajib diisi."], "deskripsi": ["Deskripsi wajib diisi."]}}` |
+| Nama > 100 karakter | `422` `{"errors": {"nama": ["Nama maksimal 100 karakter."]}}` |
+
+Di halaman web, error tampil di bawah field dan input lama tetap terisi. Pesan ada di `resources/lang/validation.php`.
+
+### 🌐 Task 03: Build RESTful Program API
+
+`routes/api.php`: `Route::apiResource('programs', ProgramController::class);` (otomatis berawalan `/api`)
+
+| Method | Endpoint | Fungsi |
+|---|---|---|
+| GET | `/api/programs` | Ambil semua program |
+| POST | `/api/programs` | Buat program baru |
+| GET | `/api/programs/{id}` | Detail program |
+| PUT / PATCH | `/api/programs/{id}` | Ubah program |
+| DELETE | `/api/programs/{id}` | Hapus program |
+
+Contoh `GET /api/programs`:
+
+```json
+{
+    "data": [
+        { "id": 1, "nama": "Pendidikan", "deskripsi": "Program di bidang pendidikan." },
+        { "id": 2, "nama": "Kesehatan",  "deskripsi": "Program di bidang kesehatan." }
+    ]
+}
+```
+
+**Testing API:** import `docs/Preloved.U-Program-API.postman_collection.json` ke **Postman** atau **Insomnia**, lalu ubah variabel `base_url`.
+
+**Database:** default SQLite (`database/database.sqlite`, dibuat otomatis beserta 2 data contoh). Untuk MySQL, set `DB_CONNECTION=mysql` (host/user/password di `config/database.php`). Migrasi: `database/migrations/`, bisa dijalankan manual dengan `php database/migrate.php`.
+
 ## 🚧 Belum Ada / Rencana
 
 - Backend database sungguhan (MySQL / PostgreSQL)
@@ -107,7 +176,7 @@ User → index.php → BarangController::index()
 
 - **Frontend:** HTML (semantic), CSS (responsive), JavaScript (DOM & event handling)
 - **Backend:** PHP (OOP – Object Oriented Programming, arsitektur MVC)
-- **Database:** JSON (rencana: MySQL)
+- **Database:** JSON (data barang); SQLite/MySQL via PDO (data Program)
 - **Version Control:** Git & GitHub
 
 ## ▶️ Cara Menjalankan
@@ -118,7 +187,7 @@ Halaman ini memakai PHP, jadi **harus dijalankan lewat server PHP**. Membuka `in
 
 1. Salin folder project ke `C:\xampp\htdocs\`
 2. Jalankan **Apache** dari XAMPP Control Panel
-3. Buka `http://localhost/NAMA_FOLDER/index.php`
+3. Buka `http://localhost/NAMA_FOLDER/index.php` (halaman Program: `http://localhost/NAMA_FOLDER/programs`, API: `http://localhost/NAMA_FOLDER/api/programs`)
 
 **Opsi 2 — Laragon**
 
@@ -130,8 +199,10 @@ Halaman ini memakai PHP, jadi **harus dijalankan lewat server PHP**. Membuka `in
 Buka terminal di folder project, lalu jalankan:
 
 ```
-php -S localhost:8000
+php -S localhost:8000 router.php
 ```
+
+(`router.php` wajib agar URL seperti `/programs` dan `/api/programs` terbaca.) Ekstensi PHP `pdo_sqlite` harus aktif (bawaan XAMPP/Laragon).
 
 Buka `http://localhost:8000` di browser.
 
@@ -177,6 +248,7 @@ Preloved.U/
 | 5 | Sprint 04: server-side dengan PHP | Selesai |
 | 6 | Sprint 05: Object-Oriented Programming (OOP) dengan PHP | Selesai |
 | 7 | Sprint 06: Dari OOP menjadi MVC | Selesai |
+| 10 | Sprint 07: CRUD di Controller, Request & Validation, RESTful API | Selesai |
 
 ## 📄 Mata Kuliah
 

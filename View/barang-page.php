@@ -37,6 +37,7 @@ require_once __DIR__ . '/../Model/Barang.php';
       <ul>
         <li><a href="index.php" id="nav-beranda">Beranda</a></li>
         <li><a href="#kategori" id="nav-kategori">Kategori</a></li>
+        <li><a href="programs" id="nav-program">Program</a></li>
         <li><a href="#" id="nav-post">Post Barang</a></li>
         <li id="li-daftar"><a href="#" id="nav-daftar">Daftar</a></li>
         <li><a href="#" id="nav-login">Login</a></li>

@@ -1,0 +1,38 @@
+/* Tampilan halaman Program (CRUD). Memakai design token dari style.css */
+.program-page { max-width: 900px; margin: 32px auto; padding: 0 24px; }
+.program-page h1 { color: var(--navy); margin-bottom: 16px; }
+.program-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; }
+.program-head h1 { margin-bottom: 0; }
+
+.btn-simpan, .btn-edit, .btn-hapus, .btn-batal {
+  display: inline-block; padding: 8px 16px; border-radius: var(--radius);
+  font-size: 0.9rem; font-weight: 500; text-decoration: none; border: 1px solid transparent;
+}
+.btn-simpan { background: var(--navy); color: var(--white); }
+.btn-simpan:hover { background: var(--navy-dark); }
+.btn-edit { background: var(--amber-bg); color: var(--amber-text); }
+.btn-hapus { background: #FBE9E7; color: #B3261E; }
+.btn-batal { background: transparent; color: var(--text-muted); border-color: var(--border); }
+
+.alert-sukses { background: var(--green-bg); color: var(--green); padding: 10px 14px; border-radius: var(--radius); margin-bottom: 16px; }
+
+.program-tabel { background: var(--white); border-radius: var(--radius); box-shadow: var(--shadow); overflow-x: auto; }
+.program-tabel table { width: 100%; border-collapse: collapse; }
+.program-tabel th, .program-tabel td { text-align: left; padding: 12px 16px; border-bottom: 1px solid var(--border); vertical-align: top; }
+.program-tabel th { background: var(--navy); color: var(--white); font-weight: 500; }
+.program-tabel tr:last-child td { border-bottom: none; }
+.program-tabel .aksi { display: flex; gap: 8px; align-items: center; white-space: nowrap; }
+.program-tabel .aksi form { margin: 0; }
+.program-tabel .aksi button { cursor: pointer; }
+
+.empty-message { color: var(--text-muted); padding: 24px 0; }
+
+.program-form { background: var(--white); padding: 24px; border-radius: var(--radius); box-shadow: var(--shadow); display: grid; gap: 6px; }
+.program-form label { font-weight: 500; margin-top: 10px; }
+.program-form input, .program-form textarea {
+  padding: 10px 14px; border: 1px solid var(--border); border-radius: var(--radius);
+  font-size: 0.95rem; font-family: 'Inter', sans-serif; width: 100%;
+}
+.program-form .input-error { border-color: #B3261E; }
+.field-error { color: #B3261E; font-size: 0.85rem; }
+.form-actions { display: flex; gap: 10px; margin-top: 16px; }

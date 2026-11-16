@@ -1,0 +1,275 @@
+{
+  "info": {
+    "name": "Preloved.U - Program API (Pertemuan 10)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Import ke Postman atau Insomnia. Ubah variabel base_url sesuai server kamu."
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000"
+    }
+  ],
+  "item": [
+    {
+      "name": "GET /api/programs - semua program",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/programs",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "programs"
+          ]
+        },
+        "description": ""
+      }
+    },
+    {
+      "name": "POST /api/programs - input valid (200)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/programs",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "programs"
+          ]
+        },
+        "description": "",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nama\": \"Pendidikan\",\n  \"deskripsi\": \"Program di bidang pendidikan.\"\n}"
+        }
+      }
+    },
+    {
+      "name": "POST /api/programs - input kosong (422)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/programs",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "programs"
+          ]
+        },
+        "description": "",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nama\": \"\",\n  \"deskripsi\": \"\"\n}"
+        }
+      }
+    },
+    {
+      "name": "POST /api/programs - nama > 100 karakter (422)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/programs",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "programs"
+          ]
+        },
+        "description": "",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nama\": \"Pendidikanaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\n  \"deskripsi\": \"Program ...\"\n}"
+        }
+      }
+    },
+    {
+      "name": "GET /api/programs/1 - detail",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/programs/1",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "programs",
+            "1"
+          ]
+        },
+        "description": ""
+      }
+    },
+    {
+      "name": "PUT /api/programs/1 - ubah",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/programs/1",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "programs",
+            "1"
+          ]
+        },
+        "description": "",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nama\": \"Pendidikan Tinggi\",\n  \"deskripsi\": \"Program di bidang pendidikan tinggi.\"\n}"
+        }
+      }
+    },
+    {
+      "name": "PATCH /api/programs/1 - ubah",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/programs/1",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "programs",
+            "1"
+          ]
+        },
+        "description": "",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nama\": \"Pendidikan\",\n  \"deskripsi\": \"Program di bidang pendidikan.\"\n}"
+        }
+      }
+    },
+    {
+      "name": "PUT /api/programs/1 - input kosong (422)",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/programs/1",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "programs",
+            "1"
+          ]
+        },
+        "description": "",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nama\": \"\",\n  \"deskripsi\": \"\"\n}"
+        }
+      }
+    },
+    {
+      "name": "DELETE /api/programs/2 - hapus",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/programs/2",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "programs",
+            "2"
+          ]
+        },
+        "description": ""
+      }
+    }
+  ]
+}
