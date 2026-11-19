@@ -32,10 +32,22 @@
           ]
         },
         "description": ""
-      }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code 200\", function () { pm.response.to.have.status(200); });",
+              "pm.test(\"Response berupa JSON\", function () { pm.response.to.be.json; });"
+            ]
+          }
+        }
+      ]
     },
     {
-      "name": "POST /api/programs - input valid (200)",
+      "name": "POST /api/programs - input valid (201)",
       "request": {
         "method": "POST",
         "header": [
@@ -63,7 +75,19 @@
           "mode": "raw",
           "raw": "{\n  \"nama\": \"Pendidikan\",\n  \"deskripsi\": \"Program di bidang pendidikan.\"\n}"
         }
-      }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code 201\", function () { pm.response.to.have.status(201); });",
+              "pm.test(\"Response berupa JSON\", function () { pm.response.to.be.json; });"
+            ]
+          }
+        }
+      ]
     },
     {
       "name": "POST /api/programs - input kosong (422)",
@@ -94,7 +118,19 @@
           "mode": "raw",
           "raw": "{\n  \"nama\": \"\",\n  \"deskripsi\": \"\"\n}"
         }
-      }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code 422\", function () { pm.response.to.have.status(422); });",
+              "pm.test(\"Response berupa JSON\", function () { pm.response.to.be.json; });"
+            ]
+          }
+        }
+      ]
     },
     {
       "name": "POST /api/programs - nama > 100 karakter (422)",
@@ -125,7 +161,19 @@
           "mode": "raw",
           "raw": "{\n  \"nama\": \"Pendidikanaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\n  \"deskripsi\": \"Program ...\"\n}"
         }
-      }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code 422\", function () { pm.response.to.have.status(422); });",
+              "pm.test(\"Response berupa JSON\", function () { pm.response.to.be.json; });"
+            ]
+          }
+        }
+      ]
     },
     {
       "name": "GET /api/programs/1 - detail",
@@ -149,7 +197,55 @@
           ]
         },
         "description": ""
-      }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code 200\", function () { pm.response.to.have.status(200); });",
+              "pm.test(\"Response berupa JSON\", function () { pm.response.to.be.json; });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "GET /api/programs/999 - tidak ditemukan (404)",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/programs/999",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "programs",
+            "999"
+          ]
+        },
+        "description": ""
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code 404\", function () { pm.response.to.have.status(404); });",
+              "pm.test(\"Response berupa JSON\", function () { pm.response.to.be.json; });"
+            ]
+          }
+        }
+      ]
     },
     {
       "name": "PUT /api/programs/1 - ubah",
@@ -181,7 +277,19 @@
           "mode": "raw",
           "raw": "{\n  \"nama\": \"Pendidikan Tinggi\",\n  \"deskripsi\": \"Program di bidang pendidikan tinggi.\"\n}"
         }
-      }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code 200\", function () { pm.response.to.have.status(200); });",
+              "pm.test(\"Response berupa JSON\", function () { pm.response.to.be.json; });"
+            ]
+          }
+        }
+      ]
     },
     {
       "name": "PATCH /api/programs/1 - ubah",
@@ -213,7 +321,19 @@
           "mode": "raw",
           "raw": "{\n  \"nama\": \"Pendidikan\",\n  \"deskripsi\": \"Program di bidang pendidikan.\"\n}"
         }
-      }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code 200\", function () { pm.response.to.have.status(200); });",
+              "pm.test(\"Response berupa JSON\", function () { pm.response.to.be.json; });"
+            ]
+          }
+        }
+      ]
     },
     {
       "name": "PUT /api/programs/1 - input kosong (422)",
@@ -245,7 +365,19 @@
           "mode": "raw",
           "raw": "{\n  \"nama\": \"\",\n  \"deskripsi\": \"\"\n}"
         }
-      }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code 422\", function () { pm.response.to.have.status(422); });",
+              "pm.test(\"Response berupa JSON\", function () { pm.response.to.be.json; });"
+            ]
+          }
+        }
+      ]
     },
     {
       "name": "DELETE /api/programs/2 - hapus",
@@ -269,7 +401,19 @@
           ]
         },
         "description": ""
-      }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code 200\", function () { pm.response.to.have.status(200); });",
+              "pm.test(\"Response berupa JSON\", function () { pm.response.to.be.json; });"
+            ]
+          }
+        }
+      ]
     }
   ]
 }

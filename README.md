@@ -130,11 +130,22 @@ $request->validate([
 
 | Kasus | Hasil |
 |---|---|
-| Input valid | `200` `{"message": "Berhasil", "data": {...}}` |
+| Input valid (POST) | `201` `{"message": "Berhasil", "data": {...}}` |
 | Input kosong | `422` `{"message": "The given data was invalid.", "errors": {"nama": ["Nama wajib diisi."], "deskripsi": ["Deskripsi wajib diisi."]}}` |
 | Nama > 100 karakter | `422` `{"errors": {"nama": ["Nama maksimal 100 karakter."]}}` |
 
 Di halaman web, error tampil di bawah field dan input lama tetap terisi. Pesan ada di `resources/lang/validation.php`.
+
+**HTTP status code yang dipakai API:**
+
+| Kode | Arti | Kapan terjadi |
+|---|---|---|
+| `200` | OK | GET, PUT/PATCH, dan DELETE berhasil |
+| `201` | Created | POST `/api/programs` berhasil membuat data |
+| `404` | Not Found | `{id}` tidak ada (`findOrFail`), atau endpoint `/api/...` tidak terdaftar |
+| `405` | Method Not Allowed | URL ada tetapi method salah |
+| `422` | Validation Error | Input tidak memenuhi aturan validasi |
+| `500` | Server Error | Kesalahan tak terduga di server |
 
 ### 🌐 Task 03: Build RESTful Program API
 
@@ -159,13 +170,14 @@ Contoh `GET /api/programs`:
 }
 ```
 
-**Testing API:** import `docs/Preloved.U-Program-API.postman_collection.json` ke **Postman** atau **Insomnia**, lalu ubah variabel `base_url`.
+**Testing API:** (tiap request punya `pm.test` untuk status code, termasuk 404 dan 422; tangkapan layar ada di `docs/screenshots/`) import `docs/Preloved.U-Program-API.postman_collection.json` ke **Postman** atau **Insomnia**, lalu ubah variabel `base_url`.
 
 **Database:** default SQLite (`database/database.sqlite`, dibuat otomatis beserta 2 data contoh). Untuk MySQL, set `DB_CONNECTION=mysql` (host/user/password di `config/database.php`). Migrasi: `database/migrations/`, bisa dijalankan manual dengan `php database/migrate.php`.
 
 ## 🚧 Belum Ada / Rencana
 
-- Backend database sungguhan (MySQL / PostgreSQL)
+- Memindahkan data Barang dari `barang.json` ke database (saat ini hanya Program yang memakai SQLite/MySQL)
+- CRUD dan REST API untuk Barang (pola yang sama seperti `ProgramController`)
 - Login yang aman (password di-hash di server dengan session/JWT)
 - Verifikasi email kampus
 - Rating sederhana setelah transaksi
@@ -175,8 +187,9 @@ Contoh `GET /api/programs`:
 ## 🛠️ Tech Stack
 
 - **Frontend:** HTML (semantic), CSS (responsive), JavaScript (DOM & event handling)
-- **Backend:** PHP (OOP – Object Oriented Programming, arsitektur MVC)
+- **Backend:** PHP (OOP, arsitektur MVC, RESTful API, validasi request)
 - **Database:** JSON (data barang); SQLite/MySQL via PDO (data Program)
+- **API Testing:** Postman / Insomnia
 - **Version Control:** Git & GitHub
 
 ## ▶️ Cara Menjalankan
@@ -212,18 +225,38 @@ Buka `http://localhost:8000` di browser.
 
 ```
 Preloved.U/
-├── index.php                  # pintu masuk: memanggil BarangController
+├── index.php                  # pintu masuk: halaman Barang (BarangController) dan router
+├── router.php                 # router untuk `php -S` (URL /programs dan /api/programs)
 ├── functions.php              # helper tampilan: e(), formatRupiah(), urlFilter(), pesanKosong()
-├── Model/
-│   └── Barang.php             # MODEL: class Barang (data, aturan bisnis, akses barang.json)
-├── View/
-│   ├── barang-page.php        # VIEW: halaman utama
-│   ├── kartu-barang.php       # VIEW: satu kartu barang
-│   └── dialogs.php            # VIEW: dialog detail, daftar, login, post barang
+├── Model/Barang.php           # MODEL Barang (data, aturan bisnis, akses barang.json)
+├── View/                      # VIEW Barang: barang-page, kartu-barang, dialogs
 ├── Controller/
-│   └── BarangController.php   # CONTROLLER: request → Model → View
+│   └── BarangController.php   # CONTROLLER Barang: request → Model → View
+├── app/                       # lapisan bergaya Laravel (Pertemuan 10)
+│   ├── bootstrap.php          # autoloader, helper, session
+│   ├── helpers.php            # view(), response(), redirect(), old(), errors()
+│   ├── Http/
+│   │   ├── Controllers/ProgramController.php   # CRUD + validasi + API
+│   │   ├── Request.php        # input request + validate()
+│   │   ├── Response.php       # response HTML/JSON/redirect
+│   │   └── ValidationException.php
+│   ├── Models/                # Model dasar (gaya Eloquent) dan Program
+│   ├── Database/              # Connection (PDO), Migrator
+│   └── Support/               # Route (web/api) dan Validator
+├── routes/
+│   ├── web.php                # Route::resource('programs', ...)
+│   └── api.php                # Route::apiResource('programs', ...)
+├── resources/
+│   ├── views/programs/        # index, create, edit, _form
+│   ├── views/layouts/app.php
+│   └── lang/validation.php    # pesan validasi (Bahasa Indonesia)
+├── database/
+│   ├── migrations/            # migrasi tabel programs
+│   └── migrate.php
+├── config/database.php        # koneksi SQLite / MySQL
+├── docs/                      # koleksi Postman dan tangkapan layar pengujian API
 ├── barang.json                # data barang (sumber data object)
-├── style.css                  # tampilan dan responsive layout
+├── style.css, program.css     # tampilan
 ├── script.js                  # interaksi (popup, favorit, akun, post barang)
 ├── img/                       # foto barang
 └── README.md
@@ -248,6 +281,7 @@ Preloved.U/
 | 5 | Sprint 04: server-side dengan PHP | Selesai |
 | 6 | Sprint 05: Object-Oriented Programming (OOP) dengan PHP | Selesai |
 | 7 | Sprint 06: Dari OOP menjadi MVC | Selesai |
+| 9 | Migration, Model, Eloquent, dan CRUD (dasar Program) | Selesai |
 | 10 | Sprint 07: CRUD di Controller, Request & Validation, RESTful API | Selesai |
 
 ## 📄 Mata Kuliah

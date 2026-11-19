@@ -51,8 +51,8 @@ class ProgramController
             'deskripsi' => $request->deskripsi,
         ]);
 
-        if ($request->expectsJson()) {             // POST /api/programs
-            return response()->json(['message' => 'Berhasil', 'data' => $program], 200);
+        if ($request->expectsJson()) {             // POST /api/programs -> 201 Created
+            return response()->json(['message' => 'Berhasil', 'data' => $program], 201);
         }
 
         return redirect('programs')->with('sukses', 'Program berhasil ditambahkan.');
